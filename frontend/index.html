@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroHELP - Space Tourism Monitoring</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/enhanced_3d_animations.css">
+    <link rel="stylesheet" href="css/nasa_operations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <script>
+        // Set the backend API base URL for all frontend scripts
+        // For local development, use localhost
+        // For production deployment, update this to your deployed backend URL
+        window.API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? "http://localhost:8001" 
+            : "https://your-backend-url.com"; // Update this to your deployed backend URL
+        console.log('🔌 API Base URL configured:', window.API_BASE_URL);
+    </script>
+    <!-- Stars Background -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <!-- Role Selection Screen -->
+    <div id="roleSelectionScreen" class="role-selection-screen">
+        <div class="role-container">
+            <div class="role-header">
+                <h1 class="logo">
+                    <i class="fas fa-rocket"></i>
+                    AstroHELP
+                </h1>
+                <p class="tagline">Advanced AI Space Tourism & Management System</p>
+                <p class="subtitle">Select Your Interface</p>
+            </div>
+            
+            <div class="role-selection">
+                <div class="role-card aircraft-management" id="aircraftManagementCard">
+                    <div class="role-icon">
+                        <i class="fas fa-space-shuttle"></i>
+                    </div>
+                    <h3>Aircraft Management</h3>
+                    <p>Advanced controls, AI systems, and mission management</p>
+                    <ul>
+                        <li><i class="fas fa-robot"></i> AI Debris Tracking</li>
+                        <li><i class="fas fa-shield-alt"></i> Collision Avoidance</li>
+                        <li><i class="fas fa-users-cog"></i> Multi-Agent Rescue</li>
+                        <li><i class="fas fa-satellite"></i> Communication Optimizer</li>
+                        <li><i class="fas fa-battery-three-quarters"></i> Energy Management</li>
+                    </ul>
+                    <button class="role-btn management-btn" data-role="management">
+                        <i class="fas fa-cogs"></i>
+                        Access Management Console
+                    </button>
+                </div>
+                
+                <div class="role-card nasa-operations" id="nasaOperationsCard">
+                    <div class="role-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>NASA Operations</h3>
+                    <p>Professional-grade mission control and space operations</p>
+                    <ul>
+                        <li><i class="fas fa-satellite-dish"></i> Mission Control Center</li>
+                        <li><i class="fas fa-globe"></i> Deep Space Network</li>
+                        <li><i class="fas fa-calculator"></i> Orbital Mechanics</li>
+                        <li><i class="fas fa-space-station"></i> ISS Docking Simulator</li>
+                        <li><i class="fas fa-chart-line"></i> Advanced Analytics</li>
+                    </ul>
+                    <button class="role-btn nasa-btn" data-role="nasa">
+                        <i class="fas fa-rocket"></i>
+                        Access NASA Console
+                    </button>
+                </div>
+                
+                <div class="role-card tourist" id="touristCard">
+                    <div class="role-icon">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <h3>Space Tourist</h3>
+                    <p>Simplified interface for space tourism experience</p>
+                    <ul>
+                        <li><i class="fas fa-heartbeat"></i> Health Monitoring</li>
+                        <li><i class="fas fa-microphone"></i> AI Assistant</li>
+                        <li><i class="fas fa-dumbbell"></i> Fitness & Wellness</li>
+                        <li><i class="fas fa-globe"></i> Navigation Guide</li>
+                        <li><i class="fas fa-camera"></i> Experience Logger</li>
+                    </ul>
+                    <button class="role-btn tourist-btn" data-role="tourist">
+                        <i class="fas fa-rocket"></i>
+                        Begin Space Experience
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating 3D Elements -->
+        <div class="floating-elements">
+            <div class="floating-satellite">
+                <i class="fas fa-satellite"></i>
+            </div>
+            <div class="floating-planet earth"></div>
+            <div class="floating-planet mars"></div>
+            <div class="floating-asteroid"></div>
+        </div>
+    </div>
+
+    <!-- Management Dashboard -->
+    <div id="managementDashboard" class="dashboard management-dashboard hidden">
+        <!-- Management Header -->
+        <header class="dashboard-header management-header">
+            <div class="header-left">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-cogs"></i>
+                    <span>AstroHELP Management Console</span>
+                </h1>
+                <div class="mission-status">
+                    <span class="status-indicator active"></span>
+                    <span id="managementStatus">AI Systems Active</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="ai-status">
+                    <span id="aiSystemsCount">6</span> AI Agents Active
+                    <button id="managementExitBtn" class="exit-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Exit Console
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Management Content Grid -->
+        <main class="dashboard-grid management-grid">
+            <!-- AI Debris Tracking Panel -->
+            <section class="panel debris-tracking-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-satellite-dish"></i> AI Debris Tracking</h2>
+                    <div class="tracking-status">
+                        <span class="status-indicator active"></span>
+                        <span id="debrisTrackingStatus">Monitoring</span>
+                    </div>
+                </div>
+                <div class="debris-content">
+                    <div class="debris-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="debrisCount">247</span>
+                            <span class="stat-label">Objects Tracked</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="collisionRisk">LOW</span>
+                            <span class="stat-label">Risk Level</span>
+                        </div>
+                    </div>
+                    <div class="debris-visualization-container">
+                        <canvas id="debrisTrackingCanvas" width="400" height="200"></canvas>
+                        <div id="debris3DContainer" class="debris-3d-container"></div>
+                    </div>
+                    <div class="debris-controls">
+                        <button id="toggle3DView" class="btn btn-secondary">
+                            <i class="fas fa-cube"></i> Toggle 3D View
+                        </button>
+                        <button id="toggleOrbitPaths" class="btn btn-secondary">
+                            <i class="fas fa-route"></i> Show Orbits
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-Agent Rescue System -->
+            <section class="panel rescue-system-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-users-cog"></i> Multi-Agent Rescue</h2>
+                    <div class="rescue-status">
+                        <span class="status-indicator ready"></span>
+                        <span id="rescueSystemStatus">Ready</span>
+                    </div>
+                </div>
+                <div class="rescue-content">
+                    <div class="agent-grid">
+                        <div class="agent-card">
+                            <i class="fas fa-robot"></i>
+                            <span>Coordinator</span>
+                            <div class="agent-status online">Online</div>
+                        </div>
+                        <div class="agent-card">
+                            <i class="fas fa-rocket"></i>
+                            <span>Navigator</span>
+                            <div class="agent-status online">Online</div>
+                        </div>
+                        <div class="agent-card">
+                            <i class="fas fa-medkit"></i>
+                            <span>Medical</span>
+                            <div class="agent-status online">Online</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Energy Management AI -->
+            <section class="panel energy-ai-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-battery-three-quarters"></i> AI Energy Management</h2>
+                    <div class="energy-efficiency">
+                        <span class="efficiency-value" id="energyEfficiency">97%</span>
+                        <span class="efficiency-label">Efficiency</span>
+                    </div>
+                </div>
+                <div class="energy-content">
+                    <div class="energy-optimization">
+                        <div class="optimization-metric">
+                            <span class="metric-label">Solar Panel Angle:</span>
+                            <span class="metric-value" id="solarAngle">23.5°</span>
+                        </div>
+                        <div class="optimization-metric">
+                            <span class="metric-label">Battery Allocation:</span>
+                            <span class="metric-value" id="batteryAllocation">Optimal</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Communication Optimizer -->
+            <section class="panel comm-optimizer-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-satellite"></i> Communication AI</h2>
+                    <div class="bandwidth-status">
+                        <span class="bandwidth-value" id="bandwidthUsage">78%</span>
+                        <span class="bandwidth-label">Bandwidth</span>
+                    </div>
+                </div>
+                <div class="comm-content">
+                    <div class="priority-queue">
+                        <div class="queue-item high">
+                            <span class="priority-indicator"></span>
+                            <span>Emergency Protocols</span>
+                        </div>
+                        <div class="queue-item medium">
+                            <span class="priority-indicator"></span>
+                            <span>Navigation Data</span>
+                        </div>
+                        <div class="queue-item low">
+                            <span class="priority-indicator"></span>
+                            <span>Status Updates</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advanced Radar System -->
+            <section class="panel radar-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-radar"></i> Radar System</h2>
+                    <div class="radar-status">
+                        <span class="status-indicator active"></span>
+                        <span id="radarStatus">Active</span>
+                    </div>
+                </div>
+                <div class="radar-content">
+                    <canvas id="radarCanvas" width="400" height="200"></canvas>
+                    <div class="radar-info">
+                        <div class="radar-stat">
+                            <span class="radar-label">Range:</span>
+                            <span class="radar-value" id="radarRange">1000km</span>
+                        </div>
+                        <div class="radar-stat">
+                            <span class="radar-label">Objects:</span>
+                            <span class="radar-value" id="radarObjectCount">0</span>
+                        </div>
+                        <div class="radar-stat">
+                            <span class="radar-label">Threats:</span>
+                            <span class="radar-value" id="radarThreatCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Space Map -->
+            <section class="panel space-map-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-globe-americas"></i> Space Map</h2>
+                    <div class="map-mode">
+                        <span id="mapMode">3D Orbital</span>
+                    </div>
+                </div>
+                <div class="space-map-content">
+                    <canvas id="spaceMapCanvas" width="600" height="400"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- NASA Operations Dashboard -->
+    <div id="nasaDashboard" class="dashboard nasa-dashboard hidden">
+        <!-- NASA Header -->
+        <header class="dashboard-header nasa-header">
+            <div class="header-left">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-rocket"></i>
+                    <span>NASA Operations Console</span>
+                </h1>
+                <div class="mission-status">
+                    <span class="status-indicator active"></span>
+                    <span id="nasaStatus">Mission Control Active</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="mission-time">
+                    <span id="missionElapsedTime">MET: 00:00:00</span>
+                    <button id="nasaExitBtn" class="exit-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Exit NASA Console
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- NASA Content Grid -->
+        <main class="dashboard-grid nasa-grid">
+            <!-- Mission Control Center -->
+            <section class="panel mission-control-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-satellite-dish"></i> Mission Control Center</h2>
+                    <div class="mission-phase">
+                        <span class="phase-indicator"></span>
+                        <span id="missionPhase">PRE-LAUNCH</span>
+                    </div>
+                </div>
+                <div class="mission-control-content">
+                    <div class="control-stations">
+                        <div class="station-item flight-director">
+                            <i class="fas fa-user-tie"></i>
+                            <span class="station-name">FLIGHT</span>
+                            <div class="station-status go">GO</div>
+                        </div>
+                        <div class="station-item capcom">
+                            <i class="fas fa-headset"></i>
+                            <span class="station-name">CAPCOM</span>
+                            <div class="station-status go">GO</div>
+                        </div>
+                        <div class="station-item eecom">
+                            <i class="fas fa-bolt"></i>
+                            <span class="station-name">EECOM</span>
+                            <div class="station-status go">GO</div>
+                        </div>
+                        <div class="station-item fido">
+                            <i class="fas fa-route"></i>
+                            <span class="station-name">FIDO</span>
+                            <div class="station-status go">GO</div>
+                        </div>
+                    </div>
+                    <div class="mission-controls">
+                        <button id="startMissionBtn" class="mission-btn start">
+                            <i class="fas fa-play"></i>
+                            Start Mission
+                        </button>
+                        <button id="abortMissionBtn" class="mission-btn abort" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                            Abort Mission
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Telemetry -->
+            <section class="panel telemetry-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-chart-line"></i> Real-time Telemetry</h2>
+                    <div class="telemetry-rate">
+                        <span id="telemetryRate">1 Hz</span>
+                    </div>
+                </div>
+                <div class="telemetry-content">
+                    <div class="telemetry-grid">
+                        <div class="telemetry-item">
+                            <span class="telemetry-label">Altitude:</span>
+                            <span class="telemetry-value" id="telemetryAltitude">408.2 km</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-label">Velocity:</span>
+                            <span class="telemetry-value" id="telemetryVelocity">7.66 km/s</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-label">Power:</span>
+                            <span class="telemetry-value" id="telemetryPower">92%</span>
+                        </div>
+                        <div class="telemetry-item">
+                            <span class="telemetry-label">Fuel:</span>
+                            <span class="telemetry-value" id="telemetryFuel">78%</span>
+                        </div>
+                    </div>
+                    <canvas id="telemetryChart" width="400" height="150"></canvas>
+                </div>
+            </section>
+
+            <!-- Deep Space Network -->
+            <section class="panel dsn-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-satellite"></i> Deep Space Network</h2>
+                    <div class="dsn-status">
+                        <span class="status-indicator active"></span>
+                        <span id="dsnStatus">3 Stations Online</span>
+                    </div>
+                </div>
+                <div class="dsn-content">
+                    <div class="dsn-stations">
+                        <div class="dsn-station goldstone">
+                            <div class="station-header">
+                                <span class="station-name">Goldstone</span>
+                                <div class="station-status operational">OPERATIONAL</div>
+                            </div>
+                            <div class="station-details">
+                                <span class="station-detail">DSS-14 • 70m</span>
+                                <span class="station-signal">Signal: -75 dBm</span>
+                            </div>
+                        </div>
+                        <div class="dsn-station madrid">
+                            <div class="station-header">
+                                <span class="station-name">Madrid</span>
+                                <div class="station-status operational">OPERATIONAL</div>
+                            </div>
+                            <div class="station-details">
+                                <span class="station-detail">DSS-63 • 70m</span>
+                                <span class="station-signal">Signal: -82 dBm</span>
+                            </div>
+                        </div>
+                        <div class="dsn-station canberra">
+                            <div class="station-header">
+                                <span class="station-name">Canberra</span>
+                                <div class="station-status operational">OPERATIONAL</div>
+                            </div>
+                            <div class="station-details">
+                                <span class="station-detail">DSS-43 • 70m</span>
+                                <span class="station-signal">Signal: -78 dBm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dsn-controls">
+                        <button id="establishCommBtn" class="dsn-btn">
+                            <i class="fas fa-satellite-dish"></i>
+                            Establish Communication
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orbital Mechanics Calculator -->
+            <section class="panel orbital-mechanics-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-calculator"></i> Orbital Mechanics</h2>
+                    <div class="orbital-mode">
+                        <span id="orbitalMode">Trajectory</span>
+                    </div>
+                </div>
+                <div class="orbital-content">
+                    <div class="orbital-parameters">
+                        <div class="parameter-item">
+                            <span class="parameter-label">Semi-major Axis:</span>
+                            <span class="parameter-value" id="semiMajorAxis">6786.2 km</span>
+                        </div>
+                        <div class="parameter-item">
+                            <span class="parameter-label">Eccentricity:</span>
+                            <span class="parameter-value" id="eccentricity">0.0012</span>
+                        </div>
+                        <div class="parameter-item">
+                            <span class="parameter-label">Inclination:</span>
+                            <span class="parameter-value" id="inclination">51.6°</span>
+                        </div>
+                        <div class="parameter-item">
+                            <span class="parameter-label">Period:</span>
+                            <span class="parameter-value" id="orbitalPeriod">92.7 min</span>
+                        </div>
+                    </div>
+                    <div class="orbital-controls">
+                        <button id="calculateTrajectoryBtn" class="orbital-btn">
+                            <i class="fas fa-route"></i>
+                            Calculate Trajectory
+                        </button>
+                        <button id="hohmannTransferBtn" class="orbital-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            Hohmann Transfer
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ISS Docking Simulator -->
+            <section class="panel iss-docking-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-space-station"></i> ISS Docking Simulator</h2>
+                    <div class="docking-phase">
+                        <span class="phase-indicator"></span>
+                        <span id="dockingPhase">STANDBY</span>
+                    </div>
+                </div>
+                <div class="docking-content">
+                    <div class="docking-display">
+                        <canvas id="dockingCanvas" width="300" height="200"></canvas>
+                    </div>
+                    <div class="docking-parameters">
+                        <div class="docking-param">
+                            <span class="param-label">Distance:</span>
+                            <span class="param-value" id="dockingDistance">200.0 m</span>
+                        </div>
+                        <div class="docking-param">
+                            <span class="param-label">Approach Velocity:</span>
+                            <span class="param-value" id="approachVelocity">0.0 m/s</span>
+                        </div>
+                        <div class="docking-param">
+                            <span class="param-label">Lateral Offset:</span>
+                            <span class="param-value" id="lateralOffset">0.0 m</span>
+                        </div>
+                    </div>
+                    <div class="docking-controls">
+                        <button id="startDockingBtn" class="docking-btn start">
+                            <i class="fas fa-play"></i>
+                            Start Docking
+                        </button>
+                        <button id="abortDockingBtn" class="docking-btn abort" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                            Abort Docking
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ML Analytics Panel -->
+            <section class="panel ml-analytics-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-brain"></i> ML Analytics</h2>
+                    <div class="ml-status">
+                        <span class="status-indicator active"></span>
+                        <span id="mlStatus">AI Models Active</span>
+                    </div>
+                </div>
+                <div class="ml-analytics-content">
+                    <div class="ml-metrics-grid">
+                        <div class="ml-metric">
+                            <span class="metric-label">Fuel Optimization:</span>
+                            <span class="metric-value" id="mlFuelOptimization">15.3%</span>
+                        </div>
+                        <div class="ml-metric">
+                            <span class="metric-label">System Reliability:</span>
+                            <span class="metric-value" id="mlReliability">97.2%</span>
+                        </div>
+                        <div class="ml-metric">
+                            <span class="metric-label">Risk Assessment:</span>
+                            <span class="metric-value risk-level low" id="mlRiskAssessment">LOW</span>
+                        </div>
+                        <div class="ml-metric">
+                            <span class="metric-label">Anomalies Found:</span>
+                            <span class="metric-value" id="mlAnomaliesCount">0</span>
+                        </div>
+                    </div>
+                    <div class="ml-predictions">
+                        <h4><i class="fas fa-chart-line"></i> Predictive Analytics</h4>
+                        <div class="prediction-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Next maintenance: 14 days</span>
+                        </div>
+                        <div class="prediction-item">
+                            <i class="fas fa-route"></i>
+                            <span>Trajectory accuracy: 99.7%</span>
+                        </div>
+                    </div>
+                    <div class="ml-recommendations">
+                        <h4><i class="fas fa-lightbulb"></i> AI Recommendations</h4>
+                        <div id="mlRecommendations" class="recommendations-list">
+                            <div class="recommendation-item">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Optimizing fuel consumption patterns...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Launch Window Calculator -->
+            <section class="panel launch-window-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-clock"></i> Launch Window Calculator</h2>
+                    <div class="next-window">
+                        <span id="nextLaunchWindow">Next: 14:23 UTC</span>
+                    </div>
+                </div>
+                <div class="launch-window-content">
+                    <div class="launch-parameters">
+                        <div class="launch-param">
+                            <span class="param-label">Target Inclination:</span>
+                            <span class="param-value" id="targetInclination">51.6°</span>
+                        </div>
+                        <div class="launch-param">
+                            <span class="param-label">Launch Azimuth:</span>
+                            <span class="param-value" id="launchAzimuth">45.2°</span>
+                        </div>
+                        <div class="launch-param">
+                            <span class="param-label">Delta-V Required:</span>
+                            <span class="param-value" id="deltaVRequired">9.2 km/s</span>
+                        </div>
+                    </div>
+                    <div class="window-list">
+                        <div class="window-item best">
+                            <span class="window-time">Today 14:23</span>
+                            <span class="window-score">Score: 95%</span>
+                        </div>
+                        <div class="window-item good">
+                            <span class="window-time">Today 16:15</span>
+                            <span class="window-score">Score: 87%</span>
+                        </div>
+                        <div class="window-item fair">
+                            <span class="window-time">Tomorrow 15:42</span>
+                            <span class="window-score">Score: 72%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Tourist Dashboard -->
+    <div id="touristDashboard" class="dashboard tourist-dashboard hidden">
+        <!-- Tourist Header -->
+        <header class="dashboard-header tourist-header">
+            <div class="header-left">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-user-astronaut"></i>
+                    <span>Space Tourism Experience</span>
+                </h1>
+                <div class="mission-status">
+                    <span class="status-indicator active"></span>
+                    <span id="touristStatus">Enjoying the Journey</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="experience-time">
+                    <span id="experienceTime">Mission Time: 02:15:30</span>
+                    <button id="touristExitBtn" class="exit-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        End Experience
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tourist Content Grid -->
+        <main class="dashboard-grid tourist-grid">
+            <!-- Health & Wellness Panel -->
+            <section class="panel health-wellness-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-heartbeat"></i> Health & Wellness</h2>
+                    <div class="health-status">
+                        <span class="status-indicator normal"></span>
+                        <span id="healthStatus">Excellent</span>
+                    </div>
+                </div>
+                <div class="health-content">
+                    <div class="vital-signs-grid">
+                        <div class="vital-card heart-rate">
+                            <div class="vital-header">
+                                <i class="fas fa-heartbeat"></i>
+                                <span class="vital-label">Heart Rate</span>
+                            </div>
+                            <div class="vital-display">
+                                <span class="vital-value" id="touristHeartRate">72</span>
+                                <span class="vital-unit">BPM</span>
+                            </div>
+                            <div class="vital-trend" id="heartRateTrend">
+                                <canvas id="heartRateChart" width="100" height="30"></canvas>
+                            </div>
+                            <div class="vital-status normal" id="heartRateStatus">Normal</div>
+                        </div>
+                        
+                        <div class="vital-card oxygen">
+                            <div class="vital-header">
+                                <i class="fas fa-lungs"></i>
+                                <span class="vital-label">Oxygen Level</span>
+                            </div>
+                            <div class="vital-display">
+                                <span class="vital-value" id="touristOxygen">98</span>
+                                <span class="vital-unit">%</span>
+                            </div>
+                            <div class="vital-trend" id="oxygenTrend">
+                                <canvas id="oxygenChart" width="100" height="30"></canvas>
+                            </div>
+                            <div class="vital-status normal" id="oxygenStatus">Normal</div>
+                        </div>
+                        
+                        <div class="vital-card blood-pressure">
+                            <div class="vital-header">
+                                <i class="fas fa-heartbeat"></i>
+                                <span class="vital-label">Blood Pressure</span>
+                            </div>
+                            <div class="vital-display">
+                                <span class="vital-value" id="touristBloodPressure">120/80</span>
+                                <span class="vital-unit">mmHg</span>
+                            </div>
+                            <div class="vital-trend" id="bloodPressureTrend">
+                                <canvas id="bloodPressureChart" width="100" height="30"></canvas>
+                            </div>
+                            <div class="vital-status normal" id="bloodPressureStatus">Normal</div>
+                        </div>
+                        
+                        <div class="vital-card body-temp">
+                            <div class="vital-header">
+                                <i class="fas fa-thermometer-half"></i>
+                                <span class="vital-label">Body Temperature</span>
+                            </div>
+                            <div class="vital-display">
+                                <span class="vital-value" id="touristBodyTemp">98.6</span>
+                                <span class="vital-unit">°F</span>
+                            </div>
+                            <div class="vital-trend" id="bodyTempTrend">
+                                <canvas id="bodyTempChart" width="100" height="30"></canvas>
+                            </div>
+                            <div class="vital-status normal" id="bodyTempStatus">Normal</div>
+                        </div>
+                    </div>
+                    
+                    <div class="ml-health-analytics">
+                        <h4><i class="fas fa-brain"></i> AI Health Analytics</h4>
+                        <div class="health-insights">
+                            <div class="insight-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span id="healthInsight1">Heart rate variability: Excellent</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span id="healthInsight2">Overall health score: 95/100</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="wellness-recommendations">
+                        <h4>AI Wellness Suggestions:</h4>
+                        <div class="recommendation-item" id="wellnessRec1">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Try zero-gravity exercises in 15 minutes</span>
+                        </div>
+                        <div class="recommendation-item" id="wellnessRec2">
+                            <i class="fas fa-water"></i>
+                            <span>Hydration levels optimal</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Tourism Assistant -->
+            <section class="panel ai-assistant-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-robot"></i> AI Tourism Assistant</h2>
+                    <div class="assistant-status">
+                        <span class="status-indicator active"></span>
+                        <span id="assistantStatus">Ready to Help</span>
+                        <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
+                    </div>
+                </div>
+                <div class="assistant-content">
+                    <div class="assistant-messages" id="assistantMessages"></div>
+                    <div class="quick-questions">
+                        <button class="ai-quick-btn" data-question="where-are-we">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Where are we?
+                        </button>
+                        <button class="ai-quick-btn" data-question="whats-next">
+                            <i class="fas fa-clock"></i>
+                            What's next?
+                        </button>
+                        <button class="ai-quick-btn" data-question="emergency-help">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Emergency Help
+                        </button>
+                        <button class="ai-quick-btn" data-question="health-status">
+                            <i class="fas fa-heartbeat"></i>
+                            Health Status
+                        </button>
+                        <button class="ai-quick-btn" data-question="entertainment">
+                            <i class="fas fa-gamepad"></i>
+                            Entertainment
+                        </button>
+                    </div>
+                    <div class="voice-controls">
+                        <button id="aiVoiceBtn" class="voice-btn">
+                            <i class="fas fa-microphone"></i>
+                            Voice Command
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience Logger -->
+            <section class="panel experience-logger-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-camera"></i> Experience Logger</h2>
+                    <div class="photo-count">
+                        <span id="photoCount">12</span> Memories Captured
+                    </div>
+                </div>
+                <div class="logger-content">
+                    <div class="capture-controls">
+                        <button class="capture-btn photo">
+                            <i class="fas fa-camera"></i>
+                            Capture Moment
+                        </button>
+                        <button class="capture-btn video">
+                            <i class="fas fa-video"></i>
+                            Record Video
+                        </button>
+                    </div>
+                    <div class="memory-feed">
+                        <div class="memory-item">
+                            <div class="memory-preview"></div>
+                            <span class="memory-time">10 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Guide -->
+            <section class="panel nav-guide-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-globe"></i> Navigation Guide</h2>
+                    <div class="current-location">
+                        <span id="currentLocation">Earth Orbit</span>
+                    </div>
+                </div>
+                <div class="nav-guide-content">
+                    <div class="earth-view">
+                        <canvas id="earthViewCanvas" width="300" height="200"></canvas>
+                    </div>
+                    <div class="location-info">
+                        <div class="info-item">
+                            <span class="info-label">Altitude:</span>
+                            <span class="info-value" id="currentAltitude">408 km</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Speed:</span>
+                            <span class="info-value" id="currentSpeed">7.66 km/s</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+                    
+                    <!-- Radiation Monitoring -->
+                    <div class="radiation-monitoring">
+                        <div class="radiation-header">
+                            <h4><i class="fas fa-radiation"></i> Radiation Monitor</h4>
+                            <button id="toggle-radiation-monitoring" class="toggle-btn active">Monitoring</button>
+                        </div>
+                        
+                        <div class="radiation-controls">
+                            <div class="threshold-control">
+                                <label>Alert Threshold:</label>
+                                <input type="range" id="radiation-threshold" min="50" max="500" value="100" class="threshold-slider">
+                                <span id="threshold-value">100 mSv/h</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Anomalies Detection -->
+                    <div class="anomalies-section">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Detected Anomalies</h4>
+                        <div id="anomalies-list" class="anomalies-container">
+                            <div class="no-anomalies">No anomalies detected</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Earth Monitoring Dashboard (Hidden by default) -->
+        <main id="earthMonitoringDashboard" class="earth-monitoring-dashboard hidden">
+            <!-- Earth Monitoring Header -->
+            <section class="earth-monitoring-header">
+                <div class="earth-stats-grid">
+                    <div class="earth-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="fireCount">0</span>
+                            <span class="stat-label">Active Fires</span>
+                        </div>
+                    </div>
+                    
+                    <div class="earth-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="deforestationCount">0</span>
+                            <span class="stat-label">Deforestation Alerts</span>
+                        </div>
+                    </div>
+                    
+                    <div class="earth-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="floodCount">0</span>
+                            <span class="stat-label">Flood Warnings</span>
+                        </div>
+                    </div>
+                    
+                    <div class="earth-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="cropHealthScore">Good</span>
+                            <span class="stat-label">Crop Health</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Earth Monitoring Panels Grid -->
+            <div class="earth-panels-grid">
+                <!-- Satellite Data Panel -->
+                <section class="panel satellite-data-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-satellite"></i> Satellite Data</h2>
+                        <div class="satellite-status">
+                            <span class="status-indicator active"></span>
+                            <span id="satelliteStatus">Acquiring Data</span>
+                        </div>
+                    </div>
+                    
+                    <div class="satellite-controls">
+                        <div class="region-selector">
+                            <label>Monitoring Region:</label>
+                            <select id="regionSelect" class="region-dropdown">
+                                <option value="amazon">Amazon Rainforest</option>
+                                <option value="congo">Congo Basin</option>
+                                <option value="boreal">Boreal Forest</option>
+                                <option value="australia">Australian Forests</option>
+                                <option value="custom">Custom Region</option>
+                            </select>
+                        </div>
+                        
+                        <div class="coordinates-input hidden" id="customCoords">
+                            <div class="coord-group">
+                                <label>Latitude:</label>
+                                <input type="number" id="latitude" step="0.001" placeholder="0.000">
+                            </div>
+                            <div class="coord-group">
+                                <label>Longitude:</label>
+                                <input type="number" id="longitude" step="0.001" placeholder="0.000">
+                            </div>
+                        </div>
+                        
+                        <button id="analyzeSatelliteData" class="analyze-btn">
+                            <i class="fas fa-search"></i>
+                            Analyze Region
+                        </button>
+                    </div>
+                    
+                    <div class="satellite-visualization">
+                        <canvas id="satelliteCanvas" width="400" height="300"></canvas>
+                        <div class="visualization-overlay">
+                            <div class="scanning-line"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vegetation Indices Panel -->
+                <section class="panel vegetation-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-leaf"></i> Vegetation Analysis</h2>
+                        <div class="vegetation-status">
+                            <span class="status-indicator normal"></span>
+                            <span id="vegetationStatus">Monitoring</span>
+                        </div>
+                    </div>
+                    
+                    <div class="vegetation-indices">
+                        <div class="index-card ndvi">
+                            <div class="index-header">
+                                <span class="index-name">NDVI</span>
+                                <span class="index-description">Vegetation Health</span>
+                            </div>
+                            <div class="index-value" id="ndviValue">0.75</div>
+                            <div class="index-chart">
+                                <canvas id="ndviChart" width="150" height="80"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="index-card evi">
+                            <div class="index-header">
+                                <span class="index-name">EVI</span>
+                                <span class="index-description">Enhanced Vegetation</span>
+                            </div>
+                            <div class="index-value" id="eviValue">0.68</div>
+                            <div class="index-chart">
+                                <canvas id="eviChart" width="150" height="80"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="index-card nbr">
+                            <div class="index-header">
+                                <span class="index-name">NBR</span>
+                                <span class="index-description">Burn Ratio</span>
+                            </div>
+                            <div class="index-value" id="nbrValue">0.82</div>
+                            <div class="index-chart">
+                                <canvas id="nbrChart" width="150" height="80"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Machine Learning Panel -->
+                <section class="panel ml-analysis-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-brain"></i> AI Analysis</h2>
+                        <div class="ml-status">
+                            <span class="status-indicator" id="mlStatusIndicator"></span>
+                            <span id="mlStatus">Model Ready</span>
+                        </div>
+                    </div>
+                    
+                    <div class="ml-controls">
+                        <div class="model-selector">
+                            <label>Analysis Model:</label>
+                            <select id="modelSelect" class="model-dropdown">
+                                <option value="random_forest">Random Forest (Deforestation)</option>
+                                <option value="cnn">CNN (Image Classification)</option>
+                                <option value="unet">U-Net (Segmentation)</option>
+                                <option value="rnn">RNN (Time Series)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="training-controls">
+                            <button id="trainModel" class="train-btn">
+                                <i class="fas fa-cog"></i>
+                                Train Model
+                            </button>
+                            <button id="runPrediction" class="predict-btn">
+                                <i class="fas fa-search"></i>
+                                Run Analysis
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="ml-results">
+                        <div class="prediction-display">
+                            <div class="prediction-header">
+                                <h4>Analysis Results</h4>
+                                <span class="confidence-score" id="confidenceScore">--</span>
+                            </div>
+                            <div class="prediction-content" id="predictionResults">
+                                <div class="no-results">No analysis completed yet</div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Accuracy:</span>
+                                <span class="metric-value" id="modelAccuracy">--</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Training Time:</span>
+                                <span class="metric-value" id="trainingTime">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Disaster Monitoring Panel -->
+                <section class="panel disaster-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Disaster Monitoring</h2>
+                        <div class="disaster-status">
+                            <span class="status-indicator active"></span>
+                            <span id="disasterStatus">Monitoring</span>
+                        </div>
+                    </div>
+                    
+                    <div class="disaster-alerts">
+                        <div class="alert-type fire-alerts">
+                            <div class="alert-header">
+                                <i class="fas fa-fire"></i>
+                                <span>Fire Alerts</span>
+                                <span class="alert-count" id="fireAlertCount">0</span>
+                            </div>
+                            <div class="alert-list" id="fireAlertsList">
+                                <div class="no-alerts">No active fire alerts</div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert-type flood-alerts">
+                            <div class="alert-header">
+                                <i class="fas fa-tint"></i>
+                                <span>Flood Warnings</span>
+                                <span class="alert-count" id="floodAlertCount">0</span>
+                            </div>
+                            <div class="alert-list" id="floodAlertsList">
+                                <div class="no-alerts">No flood warnings</div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert-type drought-alerts">
+                            <div class="alert-header">
+                                <i class="fas fa-sun"></i>
+                                <span>Drought Conditions</span>
+                                <span class="alert-count" id="droughtAlertCount">0</span>
+                            </div>
+                            <div class="alert-list" id="droughtAlertsList">
+                                <div class="no-alerts">No drought conditions</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Time Series Analysis Panel -->
+                <section class="panel timeseries-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-chart-line"></i> Trend Analysis</h2>
+                        <div class="analysis-controls">
+                            <select id="timeRangeSelect" class="time-range-dropdown">
+                                <option value="7d">Last 7 Days</option>
+                                <option value="30d">Last 30 Days</option>
+                                <option value="90d">Last 3 Months</option>
+                                <option value="1y">Last Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="timeseries-chart">
+                        <canvas id="timeseriesCanvas" width="500" height="250"></canvas>
+                    </div>
+                    
+                    <div class="trend-indicators">
+                        <div class="trend-item">
+                            <span class="trend-label">Deforestation Trend:</span>
+                            <span class="trend-value decreasing" id="deforestationTrend">
+                                <i class="fas fa-arrow-down"></i>
+                                Decreasing
+                            </span>
+                        </div>
+                        <div class="trend-item">
+                            <span class="trend-label">Fire Activity:</span>
+                            <span class="trend-value stable" id="fireTrend">
+                                <i class="fas fa-minus"></i>
+                                Stable
+                            </span>
+                        </div>
+                        <div class="trend-item">
+                            <span class="trend-label">Vegetation Health:</span>
+                            <span class="trend-value increasing" id="vegetationTrend">
+                                <i class="fas fa-arrow-up"></i>
+                                Improving
+                            </span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen hidden">
+        <div class="loading-content">
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <h2>Initializing Mission Systems...</h2>
+            <p id="loadingMessage">Connecting to AstroHELP servers...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/debris_tracking.js"></script>
+    <script src="js/ai_assistant.js"></script>
+    <!-- Core AI Systems -->
+    <script src="js/enhanced_ai_assistant.js"></script>
+    <script src="js/radar_system.js"></script>
+    <script src="js/space_map.js"></script>
+    <script src="js/ai_systems.js"></script>
+    
+    <!-- Enhanced Systems -->
+    <script src="js/ai_chatbox.js"></script>
+    <script src="js/gps_routes_navigation.js"></script>
+    <script src="js/rocket_transitions.js"></script>
+    <script src="js/camera_movement_capture.js"></script>
+    <script src="js/nasa_operations.js"></script>
+    <script src="js/tourist_health_monitor.js"></script>
+    
+    <!-- Existing Systems -->
+    <script src="js/vitals.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/space_weather.js"></script>
+    <script src="js/voice_commands.js"></script>
+    <script src="js/mission_log.js"></script>
+    <script src="js/team_chat.js"></script>
+    <script src="js/pilot_control.js"></script>
+    <script src="js/scientific_analysis.js"></script>
+    <script src="js/earth_monitoring.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

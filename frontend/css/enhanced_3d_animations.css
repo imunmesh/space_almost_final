@@ -1,0 +1,837 @@
+/* Enhanced 3D Animations and Beautiful Frontend Improvements */
+
+/* Advanced 3D Transformations */
+:root {
+    /* Enhanced color variables for better visual impact */
+    --hologram-blue: #00d4ff;
+    --neon-green: #39ff14;
+    --cyber-purple: #8a2be2;
+    --electric-yellow: #ffff00;
+    --plasma-red: #ff073a;
+    
+    /* 3D perspective variables */
+    --perspective-distance: 1000px;
+    --rotation-speed: 20s;
+    --float-distance: 20px;
+    --glow-intensity: 0.6;
+}
+
+/* Enhanced Parallax Stars Background with 3D depth */
+.stars-container {
+    perspective: var(--perspective-distance);
+    transform-style: preserve-3d;
+}
+
+.stars, .stars2, .stars3 {
+    transform-style: preserve-3d;
+}
+
+.stars {
+    transform: translateZ(-500px);
+    animation: stars-move-3d 25s linear infinite, stars-depth 8s ease-in-out infinite alternate;
+}
+
+.stars2 {
+    transform: translateZ(-300px);
+    animation: stars-move-3d 35s linear infinite reverse, stars-depth 12s ease-in-out infinite alternate-reverse;
+}
+
+.stars3 {
+    transform: translateZ(-100px);
+    animation: stars-move-3d 45s linear infinite, stars-depth 15s ease-in-out infinite alternate;
+}
+
+@keyframes stars-move-3d {
+    0% { transform: translateZ(-500px) translateX(0) translateY(0) rotateZ(0deg); }
+    100% { transform: translateZ(-500px) translateX(-200px) translateY(-100px) rotateZ(360deg); }
+}
+
+@keyframes stars-depth {
+    0% { transform: translateZ(-500px) scale(1); }
+    100% { transform: translateZ(-200px) scale(1.2); }
+}
+
+/* 3D Floating Space Objects */
+.floating-elements {
+    perspective: var(--perspective-distance);
+    transform-style: preserve-3d;
+}
+
+.floating-satellite {
+    animation: satellite-3d-orbit 30s linear infinite, satellite-wobble 4s ease-in-out infinite;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 0 20px var(--hologram-blue));
+}
+
+@keyframes satellite-3d-orbit {
+    0% { 
+        transform: rotateY(0deg) translateZ(200px) rotateX(0deg);
+    }
+    25% { 
+        transform: rotateY(90deg) translateZ(200px) rotateX(15deg);
+    }
+    50% { 
+        transform: rotateY(180deg) translateZ(200px) rotateX(0deg);
+    }
+    75% { 
+        transform: rotateY(270deg) translateZ(200px) rotateX(-15deg);
+    }
+    100% { 
+        transform: rotateY(360deg) translateZ(200px) rotateX(0deg);
+    }
+}
+
+@keyframes satellite-wobble {
+    0%, 100% { transform: rotateZ(0deg) scale(1); }
+    50% { transform: rotateZ(5deg) scale(1.1); }
+}
+
+.floating-planet {
+    animation: planet-3d-rotate 40s linear infinite, planet-float 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.floating-planet::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent);
+    animation: planet-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes planet-3d-rotate {
+    0% { transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg); }
+    100% { transform: rotateY(360deg) rotateX(360deg) rotateZ(360deg); }
+}
+
+@keyframes planet-float {
+    0%, 100% { transform: translateY(0px) translateZ(0px); }
+    50% { transform: translateY(-15px) translateZ(30px); }
+}
+
+@keyframes planet-glow {
+    0% { opacity: 0.3; transform: scale(1); }
+    100% { opacity: 0.8; transform: scale(1.2); }
+}
+
+/* Enhanced Role Cards with 3D Effects */
+.role-card {
+    perspective: var(--perspective-distance);
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: visible;
+}
+
+.role-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+    border-radius: 25px;
+    transform: translateZ(-1px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.role-card:hover {
+    transform: translateY(-15px) rotateX(10deg) rotateY(-10deg) translateZ(20px);
+    box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        0 0 50px var(--hologram-blue),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.role-card:hover::after {
+    opacity: 1;
+}
+
+.role-icon {
+    transform-style: preserve-3d;
+    animation: icon-3d-float 4s ease-in-out infinite;
+}
+
+@keyframes icon-3d-float {
+    0%, 100% { 
+        transform: translateZ(20px) rotateY(0deg) translateY(0px);
+    }
+    25% { 
+        transform: translateZ(30px) rotateY(90deg) translateY(-5px);
+    }
+    50% { 
+        transform: translateZ(40px) rotateY(180deg) translateY(-10px);
+    }
+    75% { 
+        transform: translateZ(30px) rotateY(270deg) translateY(-5px);
+    }
+}
+
+/* Holographic UI Elements */
+.hologram-border {
+    position: relative;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, var(--hologram-blue), var(--neon-green)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: subtract;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: subtract;
+}
+
+.hologram-text {
+    background: linear-gradient(45deg, var(--hologram-blue), var(--neon-green), var(--cyber-purple));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: hologram-shift 3s ease-in-out infinite;
+    text-shadow: 0 0 30px currentColor;
+}
+
+@keyframes hologram-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Enhanced Panel 3D Effects */
+.panel {
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.panel::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--hologram-blue), var(--neon-green), var(--cyber-purple));
+    border-radius: 22px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.panel:hover {
+    transform: translateY(-8px) rotateX(5deg) translateZ(10px);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px var(--hologram-blue),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.panel:hover::before {
+    opacity: 0.3;
+}
+
+/* Rocket Transition Animation System */
+.rocket-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.8), var(--space-dark));
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.rocket-transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.rocket-container {
+    position: relative;
+    width: 200px;
+    height: 300px;
+    perspective: var(--perspective-distance);
+    transform-style: preserve-3d;
+}
+
+.rocket {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(0deg);
+    font-size: 8rem;
+    color: var(--hologram-blue);
+    filter: drop-shadow(0 0 30px var(--hologram-blue));
+    animation: rocket-launch 2s ease-in-out;
+    transform-style: preserve-3d;
+}
+
+.rocket::before {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 100px;
+    background: linear-gradient(0deg, var(--plasma-red), var(--electric-yellow), transparent);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: rocket-flames 0.1s ease-in-out infinite alternate;
+    filter: blur(2px);
+}
+
+@keyframes rocket-launch {
+    0% {
+        transform: translate(-50%, 100vh) rotateX(0deg) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, 50%) rotateX(15deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -25%) rotateX(-10deg) scale(1.1);
+    }
+    80% {
+        transform: translate(-50%, -100%) rotateX(5deg) scale(0.8);
+    }
+    100% {
+        transform: translate(-50%, -200vh) rotateX(0deg) scale(0.3);
+        opacity: 0;
+    }
+}
+
+@keyframes rocket-flames {
+    0% { 
+        height: 80px; 
+        opacity: 0.8;
+        transform: translateX(-50%) scaleY(1);
+    }
+    100% { 
+        height: 120px; 
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1.3);
+    }
+}
+
+.transition-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    animation: particle-float 3s ease-out infinite;
+}
+
+@keyframes particle-float {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Real-time Object Tracking Visual Effects */
+.object-tracking-indicator {
+    position: absolute;
+    border: 2px solid var(--neon-green);
+    border-radius: 50%;
+    animation: tracking-pulse 1s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+.object-tracking-indicator::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 1px solid var(--hologram-blue);
+    border-radius: 50%;
+    animation: tracking-sweep 2s linear infinite;
+}
+
+@keyframes tracking-pulse {
+    0%, 100% { 
+        transform: scale(1) rotateZ(0deg);
+        border-color: var(--neon-green);
+    }
+    50% { 
+        transform: scale(1.2) rotateZ(180deg);
+        border-color: var(--hologram-blue);
+    }
+}
+
+@keyframes tracking-sweep {
+    0% { 
+        transform: scale(1) rotateZ(0deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(2) rotateZ(360deg);
+        opacity: 0;
+    }
+}
+
+/* Enhanced Debris Tracking Visualization */
+.debris-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--plasma-red);
+    border-radius: 50%;
+    animation: debris-movement 10s linear infinite;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 0 5px var(--plasma-red));
+}
+
+.debris-particle::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: radial-gradient(circle, var(--electric-yellow), transparent);
+    border-radius: 50%;
+    animation: debris-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes debris-movement {
+    0% { 
+        transform: translateX(-100px) translateY(-100px) translateZ(0px) rotateZ(0deg);
+        opacity: 0;
+    }
+    10% { 
+        opacity: 1;
+    }
+    90% { 
+        opacity: 1;
+    }
+    100% { 
+        transform: translateX(1000px) translateY(500px) translateZ(200px) rotateZ(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes debris-glow {
+    0% { 
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    100% { 
+        opacity: 0.8;
+        transform: scale(1.5);
+    }
+}
+
+/* 3D Debris Visualization Container */
+.debris-3d-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    margin-top: 20px;
+    border-radius: 15px;
+    background: rgba(10, 15, 30, 0.7);
+    overflow: hidden;
+    display: none;
+}
+
+.debris-3d-container.active {
+    display: block;
+}
+
+.debris-3d-scene {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(-500px) rotateX(-20deg) rotateY(0deg);
+    animation: scene-rotate 60s linear infinite;
+}
+
+@keyframes scene-rotate {
+    0% { transform: translateZ(-500px) rotateX(-20deg) rotateY(0deg); }
+    100% { transform: translateZ(-500px) rotateX(-20deg) rotateY(360deg); }
+}
+
+.debris-object-3d {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 0 10px currentColor;
+    animation: debris-float 4s ease-in-out infinite alternate;
+}
+
+.debris-object-3d::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, currentColor, transparent);
+    opacity: 0.3;
+}
+
+.debris-object-3d.high-risk {
+    width: 12px;
+    height: 12px;
+    animation: high-risk-pulse 1s ease-in-out infinite;
+}
+
+.debris-object-3d.collision-course {
+    width: 16px;
+    height: 16px;
+    animation: collision-warning 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes debris-float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(0, -10px, 5px) scale(1.2); }
+}
+
+@keyframes high-risk-pulse {
+    0%, 100% { 
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow: 0 0 15px currentColor;
+    }
+    50% { 
+        transform: translate3d(0, 0, 10px) scale(1.5);
+        box-shadow: 0 0 30px currentColor;
+    }
+}
+
+@keyframes collision-warning {
+    0% { 
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow: 0 0 20px var(--critical-red);
+    }
+    100% { 
+        transform: translate3d(0, 0, 20px) scale(2);
+        box-shadow: 0 0 40px var(--critical-red);
+    }
+}
+
+.debris-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.debris-controls .btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid var(--hologram-blue);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.debris-controls .btn:hover {
+    background: linear-gradient(45deg, var(--hologram-blue), var(--neon-green));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+}
+
+.debris-controls .btn:active {
+    transform: translateY(0);
+}
+
+.debris-visualization-container {
+    position: relative;
+    margin-top: 15px;
+}
+
+/* Enhanced 3D Debris Objects with More Realistic Visualization */
+.debris-object-3d.low-risk {
+    background: radial-gradient(circle at 30% 30%, #8888ff, #4444aa);
+    width: 6px;
+    height: 6px;
+}
+
+.debris-object-3d.medium-risk {
+    background: radial-gradient(circle at 30% 30%, #ffff00, #aaaa00);
+    width: 8px;
+    height: 8px;
+}
+
+.debris-object-3d.high-risk {
+    background: radial-gradient(circle at 30% 30%, #ffaa00, #cc8800);
+    width: 10px;
+    height: 10px;
+}
+
+.debris-object-3d.critical-risk {
+    background: radial-gradient(circle at 30% 30%, #ff3333, #cc0000);
+    width: 12px;
+    height: 12px;
+    animation: critical-risk-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes critical-risk-pulse {
+    0%, 100% { 
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow: 0 0 20px #ff3333;
+    }
+    50% { 
+        transform: translate3d(0, 0, 15px) scale(1.8);
+        box-shadow: 0 0 40px #ff3333;
+    }
+}
+
+/* Enhanced Spacecraft Visualization */
+.spacecraft-3d {
+    background: radial-gradient(circle at 30% 30%, #00ff88, #008844);
+    width: 16px;
+    height: 16px;
+    animation: spacecraft-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spacecraft-pulse {
+    0%, 100% { 
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow: 0 0 20px #00ff88;
+    }
+    50% { 
+        transform: translate3d(0, 0, 10px) scale(1.3);
+        box-shadow: 0 0 30px #00ff88;
+    }
+}
+
+/* Orbit Paths for Debris Visualization */
+.orbit-paths {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.orbit-path {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) translateZ(0);
+}
+
+.orbit-path.low {
+    border: 1px dashed rgba(136, 136, 255, 0.3);
+}
+
+.orbit-path.medium {
+    border: 1px dashed rgba(255, 255, 0, 0.3);
+}
+
+.orbit-path.high {
+    border: 1px dashed rgba(255, 170, 0, 0.3);
+}
+
+.orbit-path.critical {
+    border: 1px dashed rgba(255, 51, 51, 0.3);
+}
+
+/* Enhanced 3D Scene with Depth Effects */
+.debris-3d-scene::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, rgba(10, 15, 30, 0.8) 100%);
+    pointer-events: none;
+}
+
+/* Earth Visualization in 3D Scene */
+.earth-3d {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #1e90ff, #0066cc);
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) translateZ(-20px);
+    box-shadow: 0 0 40px #1e90ff;
+    animation: earth-rotate 120s linear infinite;
+}
+
+.earth-3d::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30, 144, 255, 0.3), transparent);
+    animation: earth-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes earth-rotate {
+    0% { transform: translate(-50%, -50%) translateZ(-20px) rotateY(0deg); }
+    100% { transform: translate(-50%, -50%) translateZ(-20px) rotateY(360deg); }
+}
+
+@keyframes earth-glow {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+/* GPS Navigation 3D Effects */
+.navigation-waypoint {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    animation: waypoint-beacon 2s ease-in-out infinite;
+}
+
+.navigation-waypoint::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px solid var(--neon-green);
+    border-radius: 50%;
+    animation: waypoint-ring 3s ease-out infinite;
+}
+
+@keyframes waypoint-beacon {
+    0%, 100% { 
+        transform: translateZ(0px) scale(1);
+        filter: brightness(1);
+    }
+    50% { 
+        transform: translateZ(20px) scale(1.3);
+        filter: brightness(1.5);
+    }
+}
+
+@keyframes waypoint-ring {
+    0% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* Health Monitor 3D Pulse Effect */
+.health-pulse-effect {
+    position: relative;
+    overflow: visible;
+}
+
+.health-pulse-effect::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, var(--neon-green), transparent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: health-pulse 2s ease-out infinite;
+}
+
+@keyframes health-pulse {
+    0% { 
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Enhanced Responsive Design for 3D Effects */
+@media (max-width: 768px) {
+    :root {
+        --perspective-distance: 500px;
+        --float-distance: 10px;
+    }
+    
+    .role-card:hover {
+        transform: translateY(-10px) rotateX(5deg) rotateY(-5deg) translateZ(10px);
+    }
+    
+    .panel:hover {
+        transform: translateY(-5px) rotateX(2deg) translateZ(5px);
+    }
+    
+    .rocket {
+        font-size: 4rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stars, .stars2, .stars3,
+    .floating-satellite, .floating-planet,
+    .role-icon, .rocket {
+        animation: none;
+    }
+    
+    .role-card:hover, .panel:hover {
+        transform: translateY(-5px);
+    }
+}
+
+/* Accessibility Enhancements */
+.focus-visible {
+    outline: 2px solid var(--hologram-blue);
+    outline-offset: 4px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --hologram-blue: #0099ff;
+        --neon-green: #00ff00;
+        --cyber-purple: #ff00ff;
+    }
+}
