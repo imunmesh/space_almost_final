@@ -180,6 +180,11 @@ class RoleManager {
         if (window.energyManagementAI) {
             window.energyManagementAI.startOptimization();
         }
+        
+        // Initialize bookings management system
+        if (window.dashboard) {
+            window.dashboard.initializeBookingsSystem();
+        }
     }
 
     showTouristDashboard() {

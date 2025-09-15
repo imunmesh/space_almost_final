@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Full Integration Test</title>
+    <link rel="stylesheet" href="frontend/css/styles.css">
+    <link rel="stylesheet" href="frontend/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .test-controls {
+            padding: 20px;
+            background: #1a1a2e;
+            margin: 20px;
+            border-radius: 10px;
+        }
+        .btn {
+            background: #00ff88;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #00cc6a;
+        }
+        #output {
+            padding: 20px;
+            background: #16213e;
+            margin: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Full Integration Test</h1>
+    
+    <div class="test-controls">
+        <button id="addTestBooking" class="btn">Add Test Booking</button>
+        <button id="viewBookings" class="btn">View Bookings in Dashboard</button>
+        <button id="clearBookings" class="btn">Clear All Bookings</button>
+        <button id="checkLocalStorage" class="btn">Check LocalStorage</button>
+    </div>
+    
+    <div id="output"></div>
+
+    <div id="managementDashboard" class="dashboard management-dashboard" style="display: none;">
+        <header class="dashboard-header management-header">
+            <div class="header-left">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-cogs"></i>
+                    <span>Test Management Console</span>
+                </h1>
+            </div>
+        </header>
+
+        <main class="dashboard-grid management-grid">
+            <section class="panel bookings-management-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-ticket-alt"></i> Customer Bookings</h2>
+                    <div class="bookings-status">
+                        <span class="status-indicator active"></span>
+                        <span id="bookingsStatus">Live Updates</span>
+                        <span class="booking-count">Total: <span id="totalBookings">0</span></span>
+                    </div>
+                </div>
+                <div class="bookings-content">
+                    <div class="bookings-controls">
+                        <div class="search-bookings">
+                            <input type="text" id="bookingsSearch" placeholder="Search bookings...">
+                            <select id="bookingsFilter">
+                                <option value="all">All Tours</option>
+                                <option value="orbit">Earth Orbit</option>
+                                <option value="moon">Lunar Expedition</option>
+                                <option value="mars">Mars Flyby</option>
+                            </select>
+                        </div>
+                        <div class="refresh-controls">
+                            <button id="refreshBookings" class="btn btn-secondary">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bookings-table-container">
+                        <table class="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Tour</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <!-- Bookings will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bookings-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Today's Bookings:</span>
+                            <span class="summary-value" id="todaysBookings">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Revenue:</span>
+                            <span class="summary-value" id="totalRevenue">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('addTestBooking').addEventListener('click', function() {
+            // Create a test booking
+            const testBooking = {
+                id: 'TEST' + Date.now(),
+                tour: 'orbit',
+                date: new Date().toLocaleDateString(),
+                traveler: {
+                    firstName: 'Test',
+                    lastName: 'User',
+                    email: 'test@example.com',
+                    phone: '123-456-7890',
+                    age: 30,
+                    passport: 'P12345678'
+                },
+                total: '$250,000',
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+
+            // Get existing bookings
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            
+            // Add test booking
+            bookings.push(testBooking);
+            
+            // Save back to localStorage
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            document.getElementById('output').innerHTML = 'Test booking added: ' + testBooking.id;
+        });
+
+        document.getElementById('viewBookings').addEventListener('click', function() {
+            // Show the dashboard
+            document.getElementById('managementDashboard').style.display = 'block';
+            
+            // Create a mock dashboard instance
+            const mockDashboard = {
+                loadBookingsData: function() {
+                    // Get bookings from localStorage
+                    const bookings = JSON.parse(localStorage.getItem('spaceTourBookings')) || [];
+                    
+                    // Update the bookings table
+                    this.updateBookingsTable(bookings);
+                    
+                    // Update summary statistics
+                    this.updateBookingsSummary(bookings);
+                },
+                
+                updateBookingsTable: function(bookings) {
+                    const tableBody = document.getElementById('bookingsTableBody');
+                    if (!tableBody) return;
+                    
+                    // Clear existing content
+                    tableBody.innerHTML = '';
+                    
+                    // Update total bookings count
+                    const totalBookingsEl = document.getElementById('totalBookings');
+                    if (totalBookingsEl) {
+                        totalBookingsEl.textContent = bookings.length;
+                    }
+                    
+                    // Add each booking to the table
+                    bookings.forEach(booking => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${booking.id}</td>
+                            <td>${this.getTourName(booking.tour)}</td>
+                            <td>${booking.traveler.firstName} ${booking.traveler.lastName}</td>
+                            <td>${booking.date}</td>
+                            <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                            <td>${booking.total}</td>
+                            <td>
+                                <button class="btn btn-small btn-outline">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-small btn-secondary">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-small btn-danger">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                },
+                
+                updateBookingsSummary: function(bookings) {
+                    // Calculate today's bookings
+                    const today = new Date().toDateString();
+                    const todaysBookings = bookings.filter(booking => {
+                        const bookingDate = new Date(booking.timestamp).toDateString();
+                        return bookingDate === today;
+                    }).length;
+                    
+                    // Calculate total revenue
+                    let totalRevenue = 0;
+                    bookings.forEach(booking => {
+                        // Extract numeric value from total string (e.g., "$277,500" -> 277500)
+                        const amount = parseFloat(booking.total.replace(/[^0-9.-]+/g, ""));
+                        if (!isNaN(amount)) {
+                            totalRevenue += amount;
+                        }
+                    });
+                    
+                    // Update UI elements
+                    const todaysBookingsEl = document.getElementById('todaysBookings');
+                    const totalRevenueEl = document.getElementById('totalRevenue');
+                    
+                    if (todaysBookingsEl) {
+                        todaysBookingsEl.textContent = todaysBookings;
+                    }
+                    
+                    if (totalRevenueEl) {
+                        totalRevenueEl.textContent = `$${totalRevenue.toLocaleString()}`;
+                    }
+                },
+                
+                getTourName: function(tourKey) {
+                    const tourNames = {
+                        'orbit': 'Earth Orbit',
+                        'moon': 'Lunar Expedition',
+                        'mars': 'Mars Flyby'
+                    };
+                    return tourNames[tourKey] || 'Space Tour';
+                }
+            };
+            
+            // Load the bookings data
+            mockDashboard.loadBookingsData();
+            
+            document.getElementById('output').innerHTML = 'Dashboard initialized with bookings data';
+        });
+
+        document.getElementById('clearBookings').addEventListener('click', function() {
+            localStorage.removeItem('spaceTourBookings');
+            document.getElementById('output').innerHTML = 'All bookings cleared';
+        });
+
+        document.getElementById('checkLocalStorage').addEventListener('click', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            document.getElementById('output').innerHTML = JSON.stringify(bookings, null, 2);
+        });
+    </script>
+</body>
+</html>

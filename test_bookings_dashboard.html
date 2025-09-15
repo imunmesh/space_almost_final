@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bookings Dashboard</title>
+    <link rel="stylesheet" href="frontend/css/styles.css">
+    <link rel="stylesheet" href="frontend/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a0f;
+            color: white;
+            font-family: 'Exo 2', sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-header h1 {
+            font-family: 'Orbitron', monospace;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        .instructions {
+            background: rgba(26, 26, 46, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #00ff88, #2196f3);
+            color: #0a0a0f;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="test-header">
+            <h1><i class="fas fa-rocket"></i> Bookings Dashboard Test</h1>
+            <p>Test the aircraft management bookings dashboard</p>
+        </div>
+        
+        <div class="instructions">
+            <h2>Test Instructions</h2>
+            <ol>
+                <li>Click "Create Test Bookings" to populate sample booking data</li>
+                <li>Click "Open Management Dashboard" to view the bookings panel</li>
+                <li>In the management dashboard, you should see the "Customer Bookings" panel</li>
+                <li>The panel should display all test bookings in a table format</li>
+                <li>You can test the search, filter, and action buttons</li>
+            </ol>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="createBookings" class="btn">
+                <i class="fas fa-plus-circle"></i> Create Test Bookings
+            </button>
+            <button id="openDashboard" class="btn">
+                <i class="fas fa-external-link-alt"></i> Open Management Dashboard
+            </button>
+            <button id="clearBookings" class="btn">
+                <i class="fas fa-trash"></i> Clear All Bookings
+            </button>
+        </div>
+    </div>
+
+    <script src="test_bookings.js"></script>
+    <script>
+        document.getElementById('createBookings').addEventListener('click', function() {
+            // Create test bookings
+            const testBookings = [
+                {
+                    id: 'SPC2024001',
+                    tour: 'orbit',
+                    date: 'June 15, 2024',
+                    traveler: {
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        email: 'john.doe@example.com',
+                        phone: '+1234567890',
+                        age: 35,
+                        passport: 'P12345678'
+                    },
+                    total: '$277,500',
+                    status: 'confirmed',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: 'SPC2024002',
+                    tour: 'moon',
+                    date: 'July 22, 2024',
+                    traveler: {
+                        firstName: 'Jane',
+                        lastName: 'Smith',
+                        email: 'jane.smith@example.com',
+                        phone: '+1987654321',
+                        age: 28,
+                        passport: 'P87654321'
+                    },
+                    total: '$1,320,000',
+                    status: 'confirmed',
+                    timestamp: new Date(Date.now() - 86400000).toISOString() // Yesterday
+                },
+                {
+                    id: 'SPC2024003',
+                    tour: 'orbit',
+                    date: 'June 30, 2024',
+                    traveler: {
+                        firstName: 'Robert',
+                        lastName: 'Johnson',
+                        email: 'robert.j@example.com',
+                        phone: '+1555666777',
+                        age: 42,
+                        passport: 'P11223344'
+                    },
+                    total: '$277,500',
+                    status: 'pending',
+                    timestamp: new Date().toISOString()
+                }
+            ];
+
+            // Save to localStorage
+            localStorage.setItem('spaceTourBookings', JSON.stringify(testBookings));
+            alert('Test bookings created successfully!');
+        });
+
+        document.getElementById('openDashboard').addEventListener('click', function() {
+            // Open the main index.html file
+            window.open('frontend/index.html', '_blank');
+        });
+
+        document.getElementById('clearBookings').addEventListener('click', function() {
+            // Clear all bookings
+            localStorage.removeItem('spaceTourBookings');
+            alert('All bookings cleared!');
+        });
+    </script>
+</body>
+</html>

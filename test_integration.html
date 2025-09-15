@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Integration Test</title>
+    <link rel="stylesheet" href="frontend/css/styles.css">
+    <link rel="stylesheet" href="frontend/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="managementDashboard" class="dashboard management-dashboard">
+        <header class="dashboard-header management-header">
+            <div class="header-left">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-cogs"></i>
+                    <span>Test Management Console</span>
+                </h1>
+            </div>
+        </header>
+
+        <main class="dashboard-grid management-grid">
+            <section class="panel bookings-management-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-ticket-alt"></i> Customer Bookings</h2>
+                    <div class="bookings-status">
+                        <span class="status-indicator active"></span>
+                        <span id="bookingsStatus">Live Updates</span>
+                        <span class="booking-count">Total: <span id="totalBookings">0</span></span>
+                    </div>
+                </div>
+                <div class="bookings-content">
+                    <div class="bookings-controls">
+                        <div class="search-bookings">
+                            <input type="text" id="bookingsSearch" placeholder="Search bookings...">
+                            <select id="bookingsFilter">
+                                <option value="all">All Tours</option>
+                                <option value="orbit">Earth Orbit</option>
+                                <option value="moon">Lunar Expedition</option>
+                                <option value="mars">Mars Flyby</option>
+                            </select>
+                        </div>
+                        <div class="refresh-controls">
+                            <button id="refreshBookings" class="btn btn-secondary">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bookings-table-container">
+                        <table class="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Tour</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <!-- Bookings will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bookings-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Today's Bookings:</span>
+                            <span class="summary-value" id="todaysBookings">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Revenue:</span>
+                            <span class="summary-value" id="totalRevenue">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="frontend/js/dashboard.js"></script>
+    <script>
+        // Initialize dashboard and bookings system
+        document.addEventListener('DOMContentLoaded', function() {
+            window.dashboard = new Dashboard();
+            
+            // Show management dashboard and initialize bookings
+            setTimeout(() => {
+                window.dashboard.showManagementDashboard();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -264,6 +264,421 @@ class Dashboard {
         }
     }
     
+    // Initialize Bookings Management System
+    initializeBookingsSystem() {
+        console.log('🚀 Initializing Bookings Management System...');
+        
+        // Set up event listeners for bookings management
+        this.setupBookingsEventListeners();
+        
+        // Load initial bookings data
+        this.loadBookingsData();
+        
+        // Set up real-time updates
+        this.setupBookingsUpdates();
+        
+        console.log('✅ Bookings Management System initialized');
+    }
+    
+    setupBookingsEventListeners() {
+        // Refresh button
+        const refreshBtn = document.getElementById('refreshBookings');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                console.log('🔄 Refresh button clicked');
+                this.loadBookingsData();
+                this.showNotification('Bookings Refreshed', 'Booking data has been updated');
+            });
+        }
+        
+        // Search input
+        const searchInput = document.getElementById('bookingsSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                this.filterBookings();
+            });
+        }
+        
+        // Filter select
+        const filterSelect = document.getElementById('bookingsFilter');
+        if (filterSelect) {
+            filterSelect.addEventListener('change', () => {
+                this.filterBookings();
+            });
+        }
+    }
+    
+    loadBookingsData() {
+        console.log('🔄 Loading bookings data...');
+        
+        // Get bookings from localStorage
+        const bookings = JSON.parse(localStorage.getItem('spaceTourBookings')) || [];
+        
+        console.log('Found bookings:', bookings);
+        
+        // Update the bookings table
+        this.updateBookingsTable(bookings);
+        
+        // Update summary statistics
+        this.updateBookingsSummary(bookings);
+        
+        console.log('✅ Bookings data loaded and UI updated');
+    }
+    
+    updateBookingsTable(bookings) {
+        const tableBody = document.getElementById('bookingsTableBody');
+        if (!tableBody) return;
+        
+        // Clear existing content
+        tableBody.innerHTML = '';
+        
+        // Update total bookings count
+        const totalBookingsEl = document.getElementById('totalBookings');
+        if (totalBookingsEl) {
+            totalBookingsEl.textContent = bookings.length;
+        }
+        
+        // Add each booking to the table
+        bookings.forEach(booking => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${booking.id}</td>
+                <td>${this.getTourName(booking.tour)}</td>
+                <td>${booking.traveler.firstName} ${booking.traveler.lastName}</td>
+                <td>${booking.date}</td>
+                <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                <td>${booking.total}</td>
+                <td>
+                    <button class="btn btn-small btn-outline view-booking" data-booking-id="${booking.id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-small btn-secondary modify-booking" data-booking-id="${booking.id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-small btn-danger cancel-booking" data-booking-id="${booking.id}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        
+        // Add event listeners to action buttons
+        this.setupBookingActionListeners();
+    }
+    
+    setupBookingActionListeners() {
+        // View booking buttons
+        document.querySelectorAll('.view-booking').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const bookingId = e.target.closest('.view-booking').getAttribute('data-booking-id');
+                this.viewBookingDetails(bookingId);
+            });
+        });
+        
+        // Modify booking buttons
+        document.querySelectorAll('.modify-booking').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const bookingId = e.target.closest('.modify-booking').getAttribute('data-booking-id');
+                this.modifyBooking(bookingId);
+            });
+        });
+        
+        // Cancel booking buttons
+        document.querySelectorAll('.cancel-booking').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const bookingId = e.target.closest('.cancel-booking').getAttribute('data-booking-id');
+                this.cancelBooking(bookingId);
+            });
+        });
+    }
+    
+    getTourName(tourKey) {
+        const tourNames = {
+            'orbit': 'Earth Orbit',
+            'moon': 'Lunar Expedition',
+            'mars': 'Mars Flyby'
+        };
+        return tourNames[tourKey] || 'Space Tour';
+    }
+    
+    updateBookingsSummary(bookings) {
+        // Calculate today's bookings
+        const today = new Date().toDateString();
+        const todaysBookings = bookings.filter(booking => {
+            const bookingDate = new Date(booking.timestamp).toDateString();
+            return bookingDate === today;
+        }).length;
+        
+        // Calculate total revenue
+        let totalRevenue = 0;
+        bookings.forEach(booking => {
+            // Extract numeric value from total string (e.g., "$277,500" -> 277500)
+            const amount = parseFloat(booking.total.replace(/[^0-9.-]+/g, ""));
+            if (!isNaN(amount)) {
+                totalRevenue += amount;
+            }
+        });
+        
+        // Update UI elements
+        const todaysBookingsEl = document.getElementById('todaysBookings');
+        const totalRevenueEl = document.getElementById('totalRevenue');
+        
+        if (todaysBookingsEl) {
+            todaysBookingsEl.textContent = todaysBookings;
+        }
+        
+        if (totalRevenueEl) {
+            totalRevenueEl.textContent = `$${totalRevenue.toLocaleString()}`;
+        }
+    }
+    
+    filterBookings() {
+        console.log('🔍 Filtering bookings...');
+        
+        const searchTerm = document.getElementById('bookingsSearch').value.toLowerCase();
+        const filterValue = document.getElementById('bookingsFilter').value;
+        
+        // Get all bookings
+        const bookings = JSON.parse(localStorage.getItem('spaceTourBookings')) || [];
+        
+        // Filter bookings
+        const filteredBookings = bookings.filter(booking => {
+            // Filter by search term
+            const matchesSearch = 
+                booking.id.toLowerCase().includes(searchTerm) ||
+                booking.traveler.firstName.toLowerCase().includes(searchTerm) ||
+                booking.traveler.lastName.toLowerCase().includes(searchTerm) ||
+                this.getTourName(booking.tour).toLowerCase().includes(searchTerm);
+            
+            // Filter by tour type
+            const matchesFilter = filterValue === 'all' || booking.tour === filterValue;
+            
+            return matchesSearch && matchesFilter;
+        });
+        
+        console.log('Filtered bookings:', filteredBookings);
+        
+        // Update the table with filtered bookings
+        this.updateBookingsTable(filteredBookings);
+    }
+    
+    viewBookingDetails(bookingId) {
+        const bookings = JSON.parse(localStorage.getItem('spaceTourBookings')) || [];
+        const booking = bookings.find(b => b.id === bookingId);
+        
+        if (!booking) {
+            this.showNotification('Booking Not Found', 'The requested booking could not be found', 'error');
+            return;
+        }
+        
+        // Create modal for booking details
+        const modal = document.createElement('div');
+        modal.className = 'booking-details-modal';
+        modal.innerHTML = `
+            <div class="booking-details-modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-ticket-alt"></i> Booking Details</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="booking-details-grid">
+                        <div class="detail-group">
+                            <h3>Booking Information</h3>
+                            <div class="detail-item">
+                                <span class="label">Booking ID:</span>
+                                <span class="value">${booking.id}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Tour:</span>
+                                <span class="value">${this.getTourName(booking.tour)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Date:</span>
+                                <span class="value">${booking.date}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Status:</span>
+                                <span class="value"><span class="status-badge status-${booking.status}">${booking.status}</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <h3>Customer Information</h3>
+                            <div class="detail-item">
+                                <span class="label">Name:</span>
+                                <span class="value">${booking.traveler.firstName} ${booking.traveler.lastName}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Email:</span>
+                                <span class="value">${booking.traveler.email}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Phone:</span>
+                                <span class="value">${booking.traveler.phone || 'N/A'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Age:</span>
+                                <span class="value">${booking.traveler.age}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Passport:</span>
+                                <span class="value">${booking.traveler.passport}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <h3>Financial Information</h3>
+                            <div class="detail-item">
+                                <span class="label">Total Paid:</span>
+                                <span class="value">${booking.total}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Booking Date:</span>
+                                <span class="value">${new Date(booking.timestamp).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary print-ticket">
+                            <i class="fas fa-print"></i> Print Ticket
+                        </button>
+                        <button class="btn btn-primary close-modal-btn">
+                            <i class="fas fa-check"></i> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal to document
+        document.body.appendChild(modal);
+        
+        // Add event listeners
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        modal.querySelector('.close-modal-btn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        modal.querySelector('.print-ticket').addEventListener('click', () => {
+            this.printTicket(booking);
+        });
+    }
+    
+    modifyBooking(bookingId) {
+        // For now, we'll just show a notification that this feature is available
+        this.showNotification('Modify Booking', 'Booking modification feature would open the booking form with pre-filled data', 'info');
+    }
+    
+    cancelBooking(bookingId) {
+        const bookings = JSON.parse(localStorage.getItem('spaceTourBookings')) || [];
+        const bookingIndex = bookings.findIndex(b => b.id === bookingId);
+        
+        if (bookingIndex === -1) {
+            this.showNotification('Booking Not Found', 'The requested booking could not be found', 'error');
+            return;
+        }
+        
+        // Confirm cancellation
+        if (confirm(`Are you sure you want to cancel booking ${bookingId}?`)) {
+            // Remove booking
+            bookings.splice(bookingIndex, 1);
+            
+            // Update localStorage
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            // Refresh the bookings display
+            this.loadBookingsData();
+            
+            // Show success notification
+            this.showNotification('Booking Cancelled', `Booking ${bookingId} has been successfully cancelled`, 'success');
+        }
+    }
+    
+    printTicket(booking) {
+        // Create a simple printable version
+        const printContent = `
+            ASTROHELP SPACE TOUR TICKET
+            ============================
+            Booking ID: ${booking.id}
+            Tour: ${this.getTourName(booking.tour)}
+            Date: ${booking.date}
+            Traveler: ${booking.traveler.firstName} ${booking.traveler.lastName}
+            Email: ${booking.traveler.email}
+            Passport: ${booking.traveler.passport}
+            Total Paid: ${booking.total}
+            Status: ${booking.status.toUpperCase()}
+            
+            IMPORTANT INFORMATION:
+            - Please arrive at the spaceport 2 hours before departure
+            - Bring your passport and this ticket
+            - Follow all safety instructions from crew members
+            - Enjoy your space adventure!
+            
+            For assistance, contact: support@astrohelp.com
+        `;
+        
+        // Create a temporary iframe for printing
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-1000px';
+        document.body.appendChild(iframe);
+        
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
+            <html>
+                <head>
+                    <title>Booking Ticket - ${booking.id}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        pre { white-space: pre-wrap; }
+                    </style>
+                </head>
+                <body>
+                    <pre>${printContent}</pre>
+                </body>
+            </html>
+        `);
+        doc.close();
+        
+        // Print and clean up
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+        }, 1000);
+    }
+    
+    setupBookingsUpdates() {
+        console.log('🔄 Setting up bookings updates...');
+        
+        // Clear any existing interval to prevent multiple intervals
+        if (this.bookingsUpdateInterval) {
+            clearInterval(this.bookingsUpdateInterval);
+        }
+        
+        // Set up periodic updates (every 30 seconds)
+        this.bookingsUpdateInterval = setInterval(() => {
+            console.log('⏰ Bookings update interval triggered');
+            this.loadBookingsData();
+        }, 30000);
+        
+        console.log('✅ Bookings updates set up with 30-second interval');
+    }
+    
+    // Clean up bookings updates interval
+    cleanupBookingsUpdates() {
+        if (this.bookingsUpdateInterval) {
+            clearInterval(this.bookingsUpdateInterval);
+            this.bookingsUpdateInterval = null;
+        }
+    }
+    
     // Data Management
     refreshAllData() {
         console.log('🔄 Refreshing all data...');
@@ -595,6 +1010,8 @@ class Dashboard {
     }
 
     showManagementDashboard() {
+        console.log('🚀 Showing Management Dashboard...');
+        
         document.getElementById('roleSelectionScreen').classList.add('hidden');
         document.getElementById('managementDashboard').classList.remove('hidden');
         document.getElementById('touristDashboard').classList.add('hidden');
@@ -631,6 +1048,11 @@ class Dashboard {
         
         // Initialize careers system
         this.initializeCareersSystem();
+        
+        // Initialize bookings management system
+        this.initializeBookingsSystem();
+        
+        console.log('✅ Management Dashboard shown and systems initialized');
     }
 }
 

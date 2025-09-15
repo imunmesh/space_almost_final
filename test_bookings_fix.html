@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bookings Fix Test</title>
+    <link rel="stylesheet" href="frontend/css/styles.css">
+    <link rel="stylesheet" href="frontend/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Exo 2', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-section {
+            background: #1a1a2e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .btn {
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        #output {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .dashboard-preview {
+            background: #0f0f1a;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        .booking-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .booking-row:last-child {
+            border-bottom: none;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .status-confirmed {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-rocket"></i> Bookings System Fix Test</h1>
+    <p>Testing the fix for the "not updating showing booked tickets on aircraft management" issue</p>
+    
+    <div class="test-section">
+        <h2><i class="fas fa-cogs"></i> Test Controls</h2>
+        <button id="addTestBooking" class="btn">
+            <i class="fas fa-plus-circle"></i> Add Test Booking
+        </button>
+        <button id="viewBookings" class="btn">
+            <i class="fas fa-eye"></i> View Bookings in Dashboard
+        </button>
+        <button id="simulateUpdate" class="btn">
+            <i class="fas fa-sync"></i> Simulate Real-time Update
+        </button>
+        <button id="clearBookings" class="btn">
+            <i class="fas fa-trash"></i> Clear All Bookings
+        </button>
+        <button id="checkLocalStorage" class="btn">
+            <i class="fas fa-database"></i> Check LocalStorage
+        </button>
+    </div>
+    
+    <div id="output">Test output will appear here...</div>
+    
+    <div class="dashboard-preview">
+        <h2><i class="fas fa-ticket-alt"></i> Bookings Management Preview</h2>
+        <div class="booking-row">
+            <strong>Booking ID</strong>
+            <strong>Tour</strong>
+            <strong>Customer</strong>
+            <strong>Date</strong>
+            <strong>Status</strong>
+            <strong>Total</strong>
+        </div>
+        <div id="bookingsPreview">
+            <div class="booking-row">
+                <span>No bookings found</span>
+            </div>
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+            <h3>Summary</h3>
+            <div style="display: flex; justify-content: space-around;">
+                <div>
+                    <span>Total Bookings: </span>
+                    <span id="previewTotalBookings">0</span>
+                </div>
+                <div>
+                    <span>Today's Bookings: </span>
+                    <span id="previewTodaysBookings">0</span>
+                </div>
+                <div>
+                    <span>Revenue: </span>
+                    <span id="previewRevenue">$0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Utility functions
+        function getTourName(tourKey) {
+            const tourNames = {
+                'orbit': 'Earth Orbit',
+                'moon': 'Lunar Expedition',
+                'mars': 'Mars Flyby'
+            };
+            return tourNames[tourKey] || 'Space Tour';
+        }
+        
+        function updatePreview(bookings) {
+            const previewContainer = document.getElementById('bookingsPreview');
+            const totalBookingsEl = document.getElementById('previewTotalBookings');
+            const todaysBookingsEl = document.getElementById('previewTodaysBookings');
+            const revenueEl = document.getElementById('previewRevenue');
+            
+            // Update total bookings
+            totalBookingsEl.textContent = bookings.length;
+            
+            // Update today's bookings
+            const today = new Date().toDateString();
+            const todaysBookings = bookings.filter(booking => {
+                const bookingDate = new Date(booking.timestamp).toDateString();
+                return bookingDate === today;
+            }).length;
+            todaysBookingsEl.textContent = todaysBookings;
+            
+            // Update revenue
+            let totalRevenue = 0;
+            bookings.forEach(booking => {
+                const amount = parseFloat(booking.total.replace(/[^0-9.-]+/g, ""));
+                if (!isNaN(amount)) {
+                    totalRevenue += amount;
+                }
+            });
+            revenueEl.textContent = `$${totalRevenue.toLocaleString()}`;
+            
+            // Update bookings list
+            if (bookings.length === 0) {
+                previewContainer.innerHTML = '<div class="booking-row"><span>No bookings found</span></div>';
+                return;
+            }
+            
+            previewContainer.innerHTML = '';
+            bookings.forEach(booking => {
+                const row = document.createElement('div');
+                row.className = 'booking-row';
+                row.innerHTML = `
+                    <span>${booking.id}</span>
+                    <span>${getTourName(booking.tour)}</span>
+                    <span>${booking.traveler.firstName} ${booking.traveler.lastName}</span>
+                    <span>${booking.date}</span>
+                    <span><span class="status-badge status-${booking.status}">${booking.status}</span></span>
+                    <span>${booking.total}</span>
+                `;
+                previewContainer.appendChild(row);
+            });
+        }
+        
+        // Event handlers
+        document.getElementById('addTestBooking').addEventListener('click', function() {
+            // Create a test booking
+            const testBooking = {
+                id: 'SPC' + Date.now(),
+                tour: 'orbit',
+                date: new Date().toLocaleDateString(),
+                traveler: {
+                    firstName: 'Test',
+                    lastName: 'User',
+                    email: 'test@example.com',
+                    phone: '123-456-7890',
+                    age: 30,
+                    passport: 'P12345678'
+                },
+                total: '$250,000',
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+
+            // Get existing bookings
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            
+            // Add test booking
+            bookings.push(testBooking);
+            
+            // Save back to localStorage
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            document.getElementById('output').innerHTML = `✅ Test booking added: ${testBooking.id}\n\n${JSON.stringify(testBooking, null, 2)}`;
+            
+            // Update preview
+            updatePreview(bookings);
+        });
+
+        document.getElementById('viewBookings').addEventListener('click', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            document.getElementById('output').innerHTML = `📋 Current bookings in localStorage:\n\n${JSON.stringify(bookings, null, 2)}`;
+            
+            // Update preview
+            updatePreview(bookings);
+        });
+
+        document.getElementById('simulateUpdate').addEventListener('click', function() {
+            // Simulate what happens during a real-time update
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            
+            // Add a new booking to simulate a real-time update
+            const newBooking = {
+                id: 'SPC' + (Date.now() + 1000),
+                tour: 'moon',
+                date: new Date(Date.now() + 86400000).toLocaleDateString(), // Tomorrow
+                traveler: {
+                    firstName: 'Real-time',
+                    lastName: 'Update',
+                    email: 'update@example.com',
+                    phone: '987-654-3210',
+                    age: 35,
+                    passport: 'P87654321'
+                },
+                total: '$1,200,000',
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+            
+            bookings.push(newBooking);
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            document.getElementById('output').innerHTML = `🔄 Simulated real-time update - Added new booking: ${newBooking.id}\n\n${JSON.stringify(newBooking, null, 2)}`;
+            
+            // Update preview to show the "updated" data
+            updatePreview(bookings);
+        });
+
+        document.getElementById('clearBookings').addEventListener('click', function() {
+            localStorage.removeItem('spaceTourBookings');
+            document.getElementById('output').innerHTML = '🗑️ All bookings cleared from localStorage';
+            
+            // Update preview
+            updatePreview([]);
+        });
+
+        document.getElementById('checkLocalStorage').addEventListener('click', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            const storageInfo = {
+                hasLocalStorage: typeof(Storage) !== "undefined",
+                itemCount: bookings.length,
+                storageKey: 'spaceTourBookings',
+                rawData: localStorage.getItem('spaceTourBookings')
+            };
+            
+            document.getElementById('output').innerHTML = `💾 LocalStorage Info:\n\n${JSON.stringify(storageInfo, null, 2)}`;
+        });
+        
+        // Initialize preview with existing bookings
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            updatePreview(bookings);
+            document.getElementById('output').innerHTML = '🚀 Test environment initialized\n\nClick buttons above to test the bookings system';
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+    <title>Bookings Fix Test</title>
+    <link rel="stylesheet" href="frontend/css/styles.css">
+    <link rel="stylesheet" href="frontend/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Exo 2', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-section {
+            background: #1a1a2e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .btn {
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        #output {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .dashboard-preview {
+            background: #0f0f1a;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        .booking-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .booking-row:last-child {
+            border-bottom: none;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .status-confirmed {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-rocket"></i> Bookings System Fix Test</h1>
+    <p>Testing the fix for the "not updating showing booked tickets on aircraft management" issue</p>
+    
+    <div class="test-section">
+        <h2><i class="fas fa-cogs"></i> Test Controls</h2>
+        <button id="addTestBooking" class="btn">
+            <i class="fas fa-plus-circle"></i> Add Test Booking
+        </button>
+        <button id="viewBookings" class="btn">
+            <i class="fas fa-eye"></i> View Bookings in Dashboard
+        </button>
+        <button id="simulateUpdate" class="btn">
+            <i class="fas fa-sync"></i> Simulate Real-time Update
+        </button>
+        <button id="clearBookings" class="btn">
+            <i class="fas fa-trash"></i> Clear All Bookings
+        </button>
+        <button id="checkLocalStorage" class="btn">
+            <i class="fas fa-database"></i> Check LocalStorage
+        </button>
+    </div>
+    
+    <div id="output">Test output will appear here...</div>
+    
+    <div class="dashboard-preview">
+        <h2><i class="fas fa-ticket-alt"></i> Bookings Management Preview</h2>
+        <div class="booking-row">
+            <strong>Booking ID</strong>
+            <strong>Tour</strong>
+            <strong>Customer</strong>
+            <strong>Date</strong>
+            <strong>Status</strong>
+            <strong>Total</strong>
+        </div>
+        <div id="bookingsPreview">
+            <div class="booking-row">
+                <span>No bookings found</span>
+            </div>
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+            <h3>Summary</h3>
+            <div style="display: flex; justify-content: space-around;">
+                <div>
+                    <span>Total Bookings: </span>
+                    <span id="previewTotalBookings">0</span>
+                </div>
+                <div>
+                    <span>Today's Bookings: </span>
+                    <span id="previewTodaysBookings">0</span>
+                </div>
+                <div>
+                    <span>Revenue: </span>
+                    <span id="previewRevenue">$0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Utility functions
+        function getTourName(tourKey) {
+            const tourNames = {
+                'orbit': 'Earth Orbit',
+                'moon': 'Lunar Expedition',
+                'mars': 'Mars Flyby'
+            };
+            return tourNames[tourKey] || 'Space Tour';
+        }
+        
+        function updatePreview(bookings) {
+            const previewContainer = document.getElementById('bookingsPreview');
+            const totalBookingsEl = document.getElementById('previewTotalBookings');
+            const todaysBookingsEl = document.getElementById('previewTodaysBookings');
+            const revenueEl = document.getElementById('previewRevenue');
+            
+            // Update total bookings
+            totalBookingsEl.textContent = bookings.length;
+            
+            // Update today's bookings
+            const today = new Date().toDateString();
+            const todaysBookings = bookings.filter(booking => {
+                const bookingDate = new Date(booking.timestamp).toDateString();
+                return bookingDate === today;
+            }).length;
+            todaysBookingsEl.textContent = todaysBookings;
+            
+            // Update revenue
+            let totalRevenue = 0;
+            bookings.forEach(booking => {
+                const amount = parseFloat(booking.total.replace(/[^0-9.-]+/g, ""));
+                if (!isNaN(amount)) {
+                    totalRevenue += amount;
+                }
+            });
+            revenueEl.textContent = `$${totalRevenue.toLocaleString()}`;
+            
+            // Update bookings list
+            if (bookings.length === 0) {
+                previewContainer.innerHTML = '<div class="booking-row"><span>No bookings found</span></div>';
+                return;
+            }
+            
+            previewContainer.innerHTML = '';
+            bookings.forEach(booking => {
+                const row = document.createElement('div');
+                row.className = 'booking-row';
+                row.innerHTML = `
+                    <span>${booking.id}</span>
+                    <span>${getTourName(booking.tour)}</span>
+                    <span>${booking.traveler.firstName} ${booking.traveler.lastName}</span>
+                    <span>${booking.date}</span>
+                    <span><span class="status-badge status-${booking.status}">${booking.status}</span></span>
+                    <span>${booking.total}</span>
+                `;
+                previewContainer.appendChild(row);
+            });
+        }
+        
+        // Event handlers
+        document.getElementById('addTestBooking').addEventListener('click', function() {
+            // Create a test booking
+            const testBooking = {
+                id: 'SPC' + Date.now(),
+                tour: 'orbit',
+                date: new Date().toLocaleDateString(),
+                traveler: {
+                    firstName: 'Test',
+                    lastName: 'User',
+                    email: 'test@example.com',
+                    phone: '123-456-7890',
+                    age: 30,
+                    passport: 'P12345678'
+                },
+                total: '$250,000',
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+
+            // Get existing bookings
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            
+            // Add test booking
+            bookings.push(testBooking);
+            
+            // Save back to localStorage
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            document.getElementById('output').innerHTML = `✅ Test booking added: ${testBooking.id}\n\n${JSON.stringify(testBooking, null, 2)}`;
+            
+            // Update preview
+            updatePreview(bookings);
+        });
+
+        document.getElementById('viewBookings').addEventListener('click', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            document.getElementById('output').innerHTML = `📋 Current bookings in localStorage:\n\n${JSON.stringify(bookings, null, 2)}`;
+            
+            // Update preview
+            updatePreview(bookings);
+        });
+
+        document.getElementById('simulateUpdate').addEventListener('click', function() {
+            // Simulate what happens during a real-time update
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            
+            // Add a new booking to simulate a real-time update
+            const newBooking = {
+                id: 'SPC' + (Date.now() + 1000),
+                tour: 'moon',
+                date: new Date(Date.now() + 86400000).toLocaleDateString(), // Tomorrow
+                traveler: {
+                    firstName: 'Real-time',
+                    lastName: 'Update',
+                    email: 'update@example.com',
+                    phone: '987-654-3210',
+                    age: 35,
+                    passport: 'P87654321'
+                },
+                total: '$1,200,000',
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+            
+            bookings.push(newBooking);
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            document.getElementById('output').innerHTML = `🔄 Simulated real-time update - Added new booking: ${newBooking.id}\n\n${JSON.stringify(newBooking, null, 2)}`;
+            
+            // Update preview to show the "updated" data
+            updatePreview(bookings);
+        });
+
+        document.getElementById('clearBookings').addEventListener('click', function() {
+            localStorage.removeItem('spaceTourBookings');
+            document.getElementById('output').innerHTML = '🗑️ All bookings cleared from localStorage';
+            
+            // Update preview
+            updatePreview([]);
+        });
+
+        document.getElementById('checkLocalStorage').addEventListener('click', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            const storageInfo = {
+                hasLocalStorage: typeof(Storage) !== "undefined",
+                itemCount: bookings.length,
+                storageKey: 'spaceTourBookings',
+                rawData: localStorage.getItem('spaceTourBookings')
+            };
+            
+            document.getElementById('output').innerHTML = `💾 LocalStorage Info:\n\n${JSON.stringify(storageInfo, null, 2)}`;
+        });
+        
+        // Initialize preview with existing bookings
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            updatePreview(bookings);
+            document.getElementById('output').innerHTML = '🚀 Test environment initialized\n\nClick buttons above to test the bookings system';
+        });
+    </script>
+</body>
+</html>

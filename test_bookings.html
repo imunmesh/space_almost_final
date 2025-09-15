@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bookings Test</title>
+</head>
+<body>
+    <h1>Bookings Test</h1>
+    <button id="addTestBooking">Add Test Booking</button>
+    <button id="checkBookings">Check Bookings</button>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('addTestBooking').addEventListener('click', function() {
+            // Create a test booking
+            const testBooking = {
+                id: 'TEST' + Date.now(),
+                tour: 'orbit',
+                date: new Date().toLocaleDateString(),
+                traveler: {
+                    firstName: 'Test',
+                    lastName: 'User',
+                    email: 'test@example.com',
+                    phone: '123-456-7890',
+                    age: 30,
+                    passport: 'P12345678'
+                },
+                total: '$250,000',
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+
+            // Get existing bookings
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            
+            // Add test booking
+            bookings.push(testBooking);
+            
+            // Save back to localStorage
+            localStorage.setItem('spaceTourBookings', JSON.stringify(bookings));
+            
+            document.getElementById('output').innerHTML = '<p>Test booking added: ' + testBooking.id + '</p>';
+        });
+
+        document.getElementById('checkBookings').addEventListener('click', function() {
+            const bookings = JSON.parse(localStorage.getItem('spaceTourBookings') || '[]');
+            document.getElementById('output').innerHTML = '<pre>' + JSON.stringify(bookings, null, 2) + '</pre>';
+        });
+    </script>
+</body>
+</html>
