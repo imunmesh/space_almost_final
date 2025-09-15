@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Test</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/careers.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a1a;
+            color: #e0e0ff;
+            font-family: 'Exo 2', sans-serif;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #testButton {
+            background: #00ff88;
+            color: #0a0a1a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        #testButton:hover {
+            background: #00cc6a;
+        }
+        .job-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #16213e;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .job-item:hover {
+            background: #1f4068;
+            transform: translateY(-2px);
+        }
+        .job-item i {
+            margin-right: 10px;
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Modal Test</h1>
+        <button id="testButton">Show Test Modal</button>
+        
+        <h2>Click on any job below to see details:</h2>
+        <div class="job-item" data-job='{"title":"Aerospace Engineer","salary":"$120,000 - $200,000","icon":"fas fa-rocket"}' data-category="Engineering">
+            <i class="fas fa-rocket"></i>
+            <strong>Aerospace Engineer</strong> - $120,000 - $200,000
+        </div>
+        
+        <div class="job-item" data-job='{"title":"Space Tourist Guide","salary":"$80,000 - $150,000","icon":"fas fa-user-astronaut"}' data-category="Hospitality">
+            <i class="fas fa-user-astronaut"></i>
+            <strong>Space Tourist Guide</strong> - $80,000 - $150,000
+        </div>
+    </div>
+
+    <script src="js/careers.js"></script>
+    <script>
+        document.getElementById('testButton').addEventListener('click', function() {
+            // Create a test careers instance to access the modal functionality
+            if (window.SpaceTourismCareers) {
+                const testCareers = new window.SpaceTourismCareers();
+                
+                // Create a test job object
+                const testJob = {
+                    title: "Test Position",
+                    salary: "$100,000 - $150,000",
+                    icon: "fas fa-briefcase",
+                    requirements: [
+                        "Bachelor's degree in relevant field",
+                        "3+ years of experience",
+                        "Strong communication skills"
+                    ],
+                    responsibilities: [
+                        "Develop innovative solutions",
+                        "Collaborate with team members",
+                        "Document processes and procedures"
+                    ]
+                };
+                
+                // Show the job details modal
+                testCareers.showJobDetails(testJob, "Test Category");
+            }
+        });
+        
+        // Add event listeners to job items
+        document.querySelectorAll('.job-item').forEach(item => {
+            item.addEventListener('click', function() {
+                try {
+                    const jobData = JSON.parse(this.getAttribute('data-job'));
+                    const category = this.getAttribute('data-category');
+                    console.log('Job clicked:', jobData, category);
+                    
+                    // Create a test careers instance to access the modal functionality
+                    if (window.SpaceTourismCareers) {
+                        const testCareers = new window.SpaceTourismCareers();
+                        testCareers.showJobDetails(jobData, category);
+                    }
+                } catch (error) {
+                    console.error('Error parsing job data:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

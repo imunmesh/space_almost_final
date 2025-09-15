@@ -13,6 +13,13 @@ AstroHELP is a comprehensive monitoring system designed for space tourism applic
 - AI Tourism Assistant with voice commands
 - Experience logger for capturing space memories
 - Wellness recommendations and zero-gravity exercise suggestions
+- **Space Tour Booking System** with:
+  - Real-time tour availability checking
+  - Multi-step booking process
+  - Secure payment integration
+  - Booking management (view, modify, cancel)
+  - Ticket generation and download
+  - Email confirmation simulation
 
 ### For Mission Management
 - AI Debris Tracking with real NASA data integration

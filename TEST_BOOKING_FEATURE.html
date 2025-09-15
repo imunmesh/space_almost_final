@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Feature Test</title>
+    <style>
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        h1 {
+            color: #00ff88;
+            text-align: center;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 10px;
+        }
+        button {
+            background: linear-gradient(135deg, #0f3460, #533483);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Booking Feature Test</h1>
+        
+        <div class="test-section">
+            <h2>Function Tests</h2>
+            <button onclick="testGetTourName()">Test Get Tour Name</button>
+            <button onclick="testGenerateRandomDate()">Test Generate Random Date</button>
+            <button onclick="testStepNavigation()">Test Step Navigation</button>
+            <div id="functionResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Booking Management Tests</h2>
+            <button onclick="testLocalStorage()">Test Local Storage</button>
+            <button onclick="testBookingObject()">Test Booking Object</button>
+            <div id="managementResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test functions
+        function getTourName(tourKey) {
+            const tourNames = {
+                'orbit': 'Earth Orbit Experience',
+                'moon': 'Lunar Expedition',
+                'mars': 'Mars Flyby'
+            };
+            return tourNames[tourKey] || 'Space Tour';
+        }
+        
+        function generateRandomDate() {
+            const today = new Date();
+            const randomDays = Math.floor(Math.random() * 180) + 30;
+            const futureDate = new Date(today);
+            futureDate.setDate(today.getDate() + randomDays);
+            
+            return futureDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        function testGetTourName() {
+            const results = document.getElementById('functionResults');
+            results.innerHTML = '<div class="result">Testing getTourName function...</div>';
+            
+            try {
+                const tests = [
+                    { input: 'orbit', expected: 'Earth Orbit Experience' },
+                    { input: 'moon', expected: 'Lunar Expedition' },
+                    { input: 'mars', expected: 'Mars Flyby' },
+                    { input: 'unknown', expected: 'Space Tour' }
+                ];
+                
+                let allPassed = true;
+                let resultHTML = '<div class="result"><h3>getTourName Test Results:</h3>';
+                
+                tests.forEach(test => {
+                    const result = getTourName(test.input);
+                    const passed = result === test.expected;
+                    allPassed = allPassed && passed;
+                    resultHTML += `<p>${test.input}: ${result} ${passed ? '✅' : '❌'}</p>`;
+                });
+                
+                resultHTML += `<p><strong>Overall: ${allPassed ? 'PASS' : 'FAIL'}</strong></p></div>`;
+                results.innerHTML = resultHTML;
+            } catch (error) {
+                results.innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function testGenerateRandomDate() {
+            const results = document.getElementById('functionResults');
+            results.innerHTML = '<div class="result">Testing generateRandomDate function...</div>';
+            
+            try {
+                const date = generateRandomDate();
+                const isValid = typeof date === 'string' && date.length > 0;
+                const canParse = !isNaN(new Date(date).getTime());
+                
+                const resultHTML = `
+                    <div class="result">
+                        <h3>generateRandomDate Test Results:</h3>
+                        <p>Generated date: ${date}</p>
+                        <p>Is string: ${isValid ? '✅' : '❌'}</p>
+                        <p>Can parse as date: ${canParse ? '✅' : '❌'}</p>
+                        <p><strong>Overall: ${isValid && canParse ? 'PASS' : 'FAIL'}</strong></p>
+                    </div>
+                `;
+                results.innerHTML = resultHTML;
+            } catch (error) {
+                results.innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function testStepNavigation() {
+            const results = document.getElementById('functionResults');
+            results.innerHTML = '<div class="result">Testing step navigation...</div>';
+            
+            try {
+                let currentStep = 1;
+                const goToStep = (stepNumber) => {
+                    if (stepNumber >= 1 && stepNumber <= 4) {
+                        currentStep = stepNumber;
+                    }
+                };
+                
+                const steps = [1, 2, 3, 4];
+                let allPassed = true;
+                let resultHTML = '<div class="result"><h3>Step Navigation Test Results:</h3>';
+                
+                steps.forEach(step => {
+                    goToStep(step);
+                    const passed = currentStep === step;
+                    allPassed = allPassed && passed;
+                    resultHTML += `<p>Go to step ${step}: Current step ${currentStep} ${passed ? '✅' : '❌'}</p>`;
+                });
+                
+                resultHTML += `<p><strong>Overall: ${allPassed ? 'PASS' : 'FAIL'}</strong></p></div>`;
+                results.innerHTML = resultHTML;
+            } catch (error) {
+                results.innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function testLocalStorage() {
+            const results = document.getElementById('managementResults');
+            results.innerHTML = '<div class="result">Testing localStorage functionality...</div>';
+            
+            try {
+                // Test if localStorage is available
+                const isAvailable = typeof(Storage) !== "undefined";
+                
+                // Test setting and getting data
+                const testData = { test: 'data', timestamp: new Date().toISOString() };
+                localStorage.setItem('bookingTest', JSON.stringify(testData));
+                const retrievedData = JSON.parse(localStorage.getItem('bookingTest'));
+                const dataMatches = retrievedData.test === testData.test;
+                
+                // Clean up
+                localStorage.removeItem('bookingTest');
+                
+                const resultHTML = `
+                    <div class="result">
+                        <h3>localStorage Test Results:</h3>
+                        <p>Storage available: ${isAvailable ? '✅' : '❌'}</p>
+                        <p>Data persistence: ${dataMatches ? '✅' : '❌'}</p>
+                        <p><strong>Overall: ${isAvailable && dataMatches ? 'PASS' : 'FAIL'}</strong></p>
+                    </div>
+                `;
+                results.innerHTML = resultHTML;
+            } catch (error) {
+                results.innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function testBookingObject() {
+            const results = document.getElementById('managementResults');
+            results.innerHTML = '<div class="result">Testing booking object structure...</div>';
+            
+            try {
+                // Create a sample booking object
+                const booking = {
+                    id: 'SPC' + Date.now(),
+                    tour: 'orbit',
+                    date: generateRandomDate(),
+                    traveler: {
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        email: 'john@example.com',
+                        phone: '123-456-7890',
+                        age: 30,
+                        passport: 'P12345678'
+                    },
+                    total: '$277,500',
+                    status: 'confirmed',
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Check required properties
+                const hasRequiredProps = 
+                    booking.id && 
+                    booking.tour && 
+                    booking.date && 
+                    booking.traveler && 
+                    booking.traveler.firstName && 
+                    booking.traveler.lastName && 
+                    booking.traveler.email && 
+                    booking.traveler.passport && 
+                    booking.total && 
+                    booking.status && 
+                    booking.timestamp;
+                
+                const resultHTML = `
+                    <div class="result">
+                        <h3>Booking Object Test Results:</h3>
+                        <p>Has all required properties: ${hasRequiredProps ? '✅' : '❌'}</p>
+                        <p>ID format correct: ${booking.id.startsWith('SPC') ? '✅' : '❌'}</p>
+                        <p>Status valid: ${['confirmed', 'pending'].includes(booking.status) ? '✅' : '❌'}</p>
+                        <p><strong>Overall: ${hasRequiredProps ? 'PASS' : 'FAIL'}</strong></p>
+                        <pre>${JSON.stringify(booking, null, 2)}</pre>
+                    </div>
+                `;
+                results.innerHTML = resultHTML;
+            } catch (error) {
+                results.innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

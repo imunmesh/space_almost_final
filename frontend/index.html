@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/enhanced_3d_animations.css">
+    <link rel="stylesheet" href="css/booking.css">
+    <link rel="stylesheet" href="css/careers.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -26,7 +28,7 @@
         <div class="stars2"></div>
         <div class="stars3"></div>
     </div>
-   <p>namaste</p>
+
     <!-- Role Selection Screen -->
     <div id="roleSelectionScreen" class="role-selection-screen">
         <div class="role-container">
@@ -77,6 +79,26 @@
                         Begin Space Experience
                     </button>
                 </div>
+            </div>
+            
+            <!-- Space Tourism Careers -->
+            <div class="role-card careers" id="careersCard">
+                <div class="role-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Space Tourism Careers</h3>
+                <p>Explore career opportunities in the expanding field of commercial space travel</p>
+                <ul>
+                    <li><i class="fas fa-rocket"></i> Engineering Positions</li>
+                    <li><i class="fas fa-user-astronaut"></i> Astronaut Crew Roles</li>
+                    <li><i class="fas fa-hotel"></i> Hospitality & Service</li>
+                    <li><i class="fas fa-heartbeat"></i> Medical & Safety</li>
+                    <li><i class="fas fa-building"></i> Ground Support</li>
+                </ul>
+                <button class="role-btn careers-btn" id="careersBtn">
+                    <i class="fas fa-search"></i>
+                    Explore Careers
+                </button>
             </div>
         </div>
         
@@ -200,9 +222,21 @@
                             <span class="metric-value" id="solarAngle">23.5°</span>
                         </div>
                         <div class="optimization-metric">
-                            <span class="metric-label">Battery Allocation:</span>
-                            <span class="metric-value" id="batteryAllocation">Optimal</span>
+                            <span class="metric-label">Power Generation:</span>
+                            <span class="metric-value" id="powerGeneration">8.2 kW</span>
                         </div>
+                        <div class="optimization-metric">
+                            <span class="metric-label">Battery Level:</span>
+                            <span class="metric-value" id="batteryLevel">92%</span>
+                        </div>
+                    </div>
+                    <div class="energy-controls">
+                        <button id="optimizeEnergy" class="btn btn-primary">
+                            <i class="fas fa-bolt"></i> Optimize Energy
+                        </button>
+                        <button id="emergencyPower" class="btn btn-secondary">
+                            <i class="fas fa-battery-full"></i> Emergency Power
+                        </button>
                     </div>
                 </div>
             </section>
@@ -210,68 +244,95 @@
             <!-- Communication Optimizer -->
             <section class="panel comm-optimizer-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-satellite"></i> Communication AI</h2>
-                    <div class="bandwidth-status">
-                        <span class="bandwidth-value" id="bandwidthUsage">78%</span>
-                        <span class="bandwidth-label">Bandwidth</span>
+                    <h2><i class="fas fa-satellite"></i> Communication Optimizer</h2>
+                    <div class="comm-status">
+                        <span class="status-indicator active"></span>
+                        <span id="commStatus">Optimal Signal</span>
                     </div>
                 </div>
                 <div class="comm-content">
-                    <div class="priority-queue">
-                        <div class="queue-item high">
-                            <span class="priority-indicator"></span>
-                            <span>Emergency Protocols</span>
+                    <div class="signal-strength">
+                        <div class="signal-bars">
+                            <div class="signal-bar active"></div>
+                            <div class="signal-bar active"></div>
+                            <div class="signal-bar active"></div>
+                            <div class="signal-bar active"></div>
+                            <div class="signal-bar active"></div>
                         </div>
-                        <div class="queue-item medium">
-                            <span class="priority-indicator"></span>
-                            <span>Navigation Data</span>
+                        <div class="signal-value" id="signalStrength">98%</div>
+                    </div>
+                    <div class="frequency-controls">
+                        <div class="frequency-display">
+                            <span class="freq-label">Current:</span>
+                            <span class="freq-value" id="currentFrequency">2.4 GHz</span>
                         </div>
-                        <div class="queue-item low">
-                            <span class="priority-indicator"></span>
-                            <span>Status Updates</span>
+                        <div class="frequency-selector">
+                            <label for="frequencySelect">Frequency:</label>
+                            <select id="frequencySelect">
+                                <option value="2.4">2.4 GHz</option>
+                                <option value="5.8">5.8 GHz</option>
+                                <option value="13">13 cm Band</option>
+                                <option value="70">70 cm Band</option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="comm-actions">
+                        <button id="boostSignal" class="btn btn-primary">
+                            <i class="fas fa-signal"></i> Boost Signal
+                        </button>
+                        <button id="scanFrequencies" class="btn btn-secondary">
+                            <i class="fas fa-search"></i> Scan Frequencies
+                        </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Advanced Radar System -->
+            <!-- Radar System -->
             <section class="panel radar-panel">
                 <div class="panel-header">
                     <h2><i class="fas fa-radar"></i> Radar System</h2>
                     <div class="radar-status">
                         <span class="status-indicator active"></span>
-                        <span id="radarStatus">Active</span>
+                        <span id="radarStatus">Scanning</span>
+                        <span class="object-count">Objects: <span id="radarObjectCount">0</span></span>
                     </div>
                 </div>
                 <div class="radar-content">
-                    <canvas id="radarCanvas" width="400" height="200"></canvas>
-                    <div class="radar-info">
-                        <div class="radar-stat">
-                            <span class="radar-label">Range:</span>
-                            <span class="radar-value" id="radarRange">1000km</span>
-                        </div>
-                        <div class="radar-stat">
-                            <span class="radar-label">Objects:</span>
-                            <span class="radar-value" id="radarObjectCount">0</span>
-                        </div>
-                        <div class="radar-stat">
-                            <span class="radar-label">Threats:</span>
-                            <span class="radar-value" id="radarThreatCount">0</span>
-                        </div>
+                    <div class="radar-display">
+                        <canvas id="radarCanvas" width="300" height="300"></canvas>
+                    </div>
+                    <div class="radar-controls">
+                        <button id="toggleRadar" class="btn btn-primary">
+                            <i class="fas fa-power-off"></i> Toggle Radar
+                        </button>
+                        <button id="adjustSensitivity" class="btn btn-secondary">
+                            <i class="fas fa-sliders-h"></i> Sensitivity
+                        </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Interactive Space Map -->
+            <!-- Space Map -->
             <section class="panel space-map-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-globe-americas"></i> Space Map</h2>
-                    <div class="map-mode">
-                        <span id="mapMode">3D Orbital</span>
+                    <h2><i class="fas fa-map"></i> Space Map</h2>
+                    <div class="map-status">
+                        <span class="status-indicator active"></span>
+                        <span id="mapStatus">Live Tracking</span>
                     </div>
                 </div>
-                <div class="space-map-content">
-                    <canvas id="spaceMapCanvas" width="600" height="400"></canvas>
+                <div class="map-content">
+                    <div class="map-container">
+                        <div id="spaceMap" class="space-map"></div>
+                    </div>
+                    <div class="map-controls">
+                        <button id="toggleOrbits" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt"></i> Toggle Orbits
+                        </button>
+                        <button id="focusCraft" class="btn btn-secondary">
+                            <i class="fas fa-crosshairs"></i> Focus Craft
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
@@ -284,20 +345,19 @@
             <div class="header-left">
                 <h1 class="dashboard-title">
                     <i class="fas fa-user-astronaut"></i>
-                    <span>Space Tourism Experience</span>
+                    <span>AstroHELP Tourist Experience</span>
                 </h1>
                 <div class="mission-status">
                     <span class="status-indicator active"></span>
-                    <span id="touristStatus">Enjoying the Journey</span>
+                    <span id="touristStatus">Enjoy Your Journey</span>
                 </div>
             </div>
             
             <div class="header-right">
-                <div class="experience-time">
-                    <span id="experienceTime">Mission Time: 02:15:30</span>
+                <div class="tourist-controls">
                     <button id="touristExitBtn" class="exit-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        End Experience
+                        Exit Experience
                     </button>
                 </div>
             </div>
@@ -305,20 +365,20 @@
 
         <!-- Tourist Content Grid -->
         <main class="dashboard-grid tourist-grid">
-            <!-- Health & Wellness Panel -->
-            <section class="panel health-wellness-panel">
+            <!-- Health Monitoring Panel -->
+            <section class="panel health-monitoring-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-heartbeat"></i> Health & Wellness</h2>
+                    <h2><i class="fas fa-heartbeat"></i> Health Monitoring</h2>
                     <div class="health-status">
                         <span class="status-indicator normal"></span>
-                        <span id="healthStatus">Excellent</span>
+                        <span id="healthStatus">All Systems Normal</span>
                     </div>
                 </div>
                 <div class="health-content">
-                    <div class="vital-signs-grid">
+                    <div class="vitals-grid">
                         <div class="vital-card heart-rate">
                             <div class="vital-header">
-                                <i class="fas fa-heartbeat"></i>
+                                <i class="fas fa-heart"></i>
                                 <span class="vital-label">Heart Rate</span>
                             </div>
                             <div class="vital-display">
@@ -333,7 +393,7 @@
                         
                         <div class="vital-card oxygen">
                             <div class="vital-header">
-                                <i class="fas fa-lungs"></i>
+                                <i class="fas fa-wind"></i>
                                 <span class="vital-label">Oxygen Level</span>
                             </div>
                             <div class="vital-display">
@@ -500,331 +560,325 @@
                     </div>
                 </div>
             </section>
-        </main>
-    </div>
 
-                    
-                    <!-- Radiation Monitoring -->
-                    <div class="radiation-monitoring">
-                        <div class="radiation-header">
-                            <h4><i class="fas fa-radiation"></i> Radiation Monitor</h4>
-                            <button id="toggle-radiation-monitoring" class="toggle-btn active">Monitoring</button>
+            <!-- Booking Feature -->
+            <section class="panel booking-section">
+                <div class="panel-header">
+                    <h2><i class="fas fa-ticket-alt"></i> Space Tour Booking</h2>
+                    <div class="booking-status">
+                        <span class="status-indicator active"></span>
+                        <span id="bookingStatus">Book Your Next Adventure</span>
+                    </div>
+                </div>
+                <div class="booking-content">
+                    <div class="booking-steps">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Select Tour</div>
                         </div>
-                        
-                        <div class="radiation-controls">
-                            <div class="threshold-control">
-                                <label>Alert Threshold:</label>
-                                <input type="range" id="radiation-threshold" min="50" max="500" value="100" class="threshold-slider">
-                                <span id="threshold-value">100 mSv/h</span>
-                            </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Traveler Details</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Review & Pay</div>
+                        </div>
+                        <div class="step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Confirmation</div>
                         </div>
                     </div>
-                    
-                    <!-- Anomalies Detection -->
-                    <div class="anomalies-section">
-                        <h4><i class="fas fa-exclamation-triangle"></i> Detected Anomalies</h4>
-                        <div id="anomalies-list" class="anomalies-container">
-                            <div class="no-anomalies">No anomalies detected</div>
+
+                    <!-- Step 1: Tour Selection -->
+                    <div class="booking-step active" id="step1">
+                        <div class="tour-selection-grid">
+                            <div class="tour-card" data-tour="orbit">
+                                <h3>Earth Orbit Experience</h3>
+                                <div class="tour-price">$250,000</div>
+                                <div class="tour-duration">5 days</div>
+                                <div class="tour-description">
+                                    Experience the breathtaking view of Earth from low Earth orbit. Perfect for first-time space tourists.
+                                </div>
+                                <div class="availability">
+                                    <span class="seats-available">8 seats available</span>
+                                    <button class="btn btn-primary book-now">Book Now</button>
+                                </div>
+                            </div>
+                            
+                            <div class="tour-card" data-tour="moon">
+                                <h3>Lunar Expedition</h3>
+                                <div class="tour-price">$1,200,000</div>
+                                <div class="tour-duration">12 days</div>
+                                <div class="tour-description">
+                                    Journey to the Moon and experience lunar gravity. Includes moonwalk and Earthrise viewing.
+                                </div>
+                                <div class="availability">
+                                    <span class="seats-available">4 seats available</span>
+                                    <button class="btn btn-primary book-now">Book Now</button>
+                                </div>
+                            </div>
+                            
+                            <div class="tour-card" data-tour="mars">
+                                <h3>Mars Flyby</h3>
+                                <div class="tour-price">$5,000,000</div>
+                                <div class="tour-duration">45 days</div>
+                                <div class="tour-description">
+                                    Experience the Red Planet up close with a flyby mission. Includes zero-gravity experiences.
+                                </div>
+                                <div class="availability">
+                                    <span class="seats-full">FULLY BOOKED</span>
+                                    <button class="btn btn-secondary" disabled>Notify When Available</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn btn-outline" id="viewBookingsBtn">
+                                <i class="fas fa-list"></i> View My Bookings
+                            </button>
+                            <button class="btn btn-primary" id="manageBookings">
+                                <i class="fas fa-cog"></i> Manage Bookings
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Traveler Details -->
+                    <div class="booking-step hidden" id="step2">
+                        <form class="booking-form">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="age">Age *</label>
+                                <input type="number" id="age" min="18" max="75" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="passport">Passport Number *</label>
+                                <input type="text" id="passport" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="address">Address</label>
+                                <textarea id="address"></textarea>
+                            </div>
+                            
+                            <div class="health-declaration">
+                                <h4>Health Declaration</h4>
+                                <div class="health-questions">
+                                    <div class="health-question">
+                                        <label>
+                                            <input type="checkbox" id="health1"> I have no history of heart conditions
+                                        </label>
+                                    </div>
+                                    <div class="health-question">
+                                        <label>
+                                            <input type="checkbox" id="health2"> I have no history of mental health issues
+                                        </label>
+                                    </div>
+                                    <div class="health-question">
+                                        <label>
+                                            <input type="checkbox" id="health3"> I am not pregnant
+                                        </label>
+                                    </div>
+                                    <div class="health-question">
+                                        <label>
+                                            <input type="checkbox" id="health4"> I have completed required training
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline" id="backToTours">
+                                    <i class="fas fa-arrow-left"></i> Back to Tours
+                                </button>
+                                <button type="button" class="btn btn-primary" id="proceedToSummary">
+                                    Proceed to Summary <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 3: Booking Summary & Payment -->
+                    <div class="booking-step hidden" id="step3">
+                        <div class="booking-summary">
+                            <div class="summary-section">
+                                <h3>Tour Details</h3>
+                                <div class="summary-item">
+                                    <span class="label">Tour:</span>
+                                    <span class="value" id="summaryTour">Earth Orbit Experience</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Duration:</span>
+                                    <span class="value" id="summaryDuration">5 days</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Date:</span>
+                                    <span class="value" id="summaryDate">June 15, 2024</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-section">
+                                <h3>Traveler Information</h3>
+                                <div class="summary-item">
+                                    <span class="label">Name:</span>
+                                    <span class="value" id="summaryName">John Doe</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Email:</span>
+                                    <span class="value" id="summaryEmail">john@example.com</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Passport:</span>
+                                    <span class="value" id="summaryPassport">P12345678</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-section">
+                                <h3>Cost Breakdown</h3>
+                                <div class="summary-item">
+                                    <span class="label">Tour Price:</span>
+                                    <span class="value" id="tourPrice">$250,000</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Training Fee:</span>
+                                    <span class="value">$5,000</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Insurance:</span>
+                                    <span class="value">$10,000</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Taxes:</span>
+                                    <span class="value">$12,500</span>
+                                </div>
+                                <div class="total-cost">
+                                    Total: <span id="totalCost">$277,500</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-methods">
+                            <div class="payment-method selected" data-method="card">
+                                <i class="fas fa-credit-card"></i>
+                                <div class="method-name">Credit/Debit Card</div>
+                            </div>
+                            <div class="payment-method" data-method="upi">
+                                <i class="fas fa-mobile-alt"></i>
+                                <div class="method-name">UPI</div>
+                            </div>
+                            <div class="payment-method" data-method="paypal">
+                                <i class="fab fa-paypal"></i>
+                                <div class="method-name">PayPal</div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-form">
+                            <div class="card-details">
+                                <div class="form-group">
+                                    <label for="cardNumber">Card Number</label>
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="form-group">
+                                    <label for="expiry">Expiry</label>
+                                    <input type="text" id="expiry" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" placeholder="123">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cardName">Name on Card</label>
+                                <input type="text" id="cardName" placeholder="John Doe">
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn btn-outline" id="backToDetails">
+                                <i class="fas fa-arrow-left"></i> Back to Details
+                            </button>
+                            <button class="btn btn-primary" id="confirmPayment">
+                                Confirm Payment <i class="fas fa-lock"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Booking Confirmation -->
+                    <div class="booking-step hidden" id="step4">
+                        <div class="booking-confirmation">
+                            <i class="fas fa-check-circle"></i>
+                            <h2>Booking Confirmed!</h2>
+                            <p>Thank you for booking your space adventure with AstroHELP. Your booking details and ticket have been sent to your email.</p>
+                            
+                            <div class="booking-details">
+                                <div class="detail-item">
+                                    <span class="label">Booking ID:</span>
+                                    <span class="value">#SPC2024001</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Tour:</span>
+                                    <span class="value" id="confirmTour">Earth Orbit Experience</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Traveler:</span>
+                                    <span class="value" id="confirmName">John Doe</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Date:</span>
+                                    <span class="value" id="confirmDate">June 15, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Total Paid:</span>
+                                    <span class="value" id="confirmAmount">$277,500</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Status:</span>
+                                    <span class="value">
+                                        <div class="booking-status">
+                                            <span class="status-badge status-confirmed">Confirmed</span>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="btn-group">
+                                <button class="btn btn-outline" id="downloadTicket">
+                                    <i class="fas fa-download"></i> Download Ticket
+                                </button>
+                                <button class="btn btn-outline" id="sendToEmail">
+                                    <i class="fas fa-envelope"></i> Send to Email
+                                </button>
+                                <button class="btn btn-primary" id="newBooking">
+                                    Book Another Tour
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
-
-        <!-- Earth Monitoring Dashboard (Hidden by default) -->
-        <main id="earthMonitoringDashboard" class="earth-monitoring-dashboard hidden">
-            <!-- Earth Monitoring Header -->
-            <section class="earth-monitoring-header">
-                <div class="earth-stats-grid">
-                    <div class="earth-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-fire"></i>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="fireCount">0</span>
-                            <span class="stat-label">Active Fires</span>
-                        </div>
-                    </div>
-                    
-                    <div class="earth-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-tree"></i>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="deforestationCount">0</span>
-                            <span class="stat-label">Deforestation Alerts</span>
-                        </div>
-                    </div>
-                    
-                    <div class="earth-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-tint"></i>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="floodCount">0</span>
-                            <span class="stat-label">Flood Warnings</span>
-                        </div>
-                    </div>
-                    
-                    <div class="earth-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-seedling"></i>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="cropHealthScore">Good</span>
-                            <span class="stat-label">Crop Health</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Earth Monitoring Panels Grid -->
-            <div class="earth-panels-grid">
-                <!-- Satellite Data Panel -->
-                <section class="panel satellite-data-panel">
-                    <div class="panel-header">
-                        <h2><i class="fas fa-satellite"></i> Satellite Data</h2>
-                        <div class="satellite-status">
-                            <span class="status-indicator active"></span>
-                            <span id="satelliteStatus">Acquiring Data</span>
-                        </div>
-                    </div>
-                    
-                    <div class="satellite-controls">
-                        <div class="region-selector">
-                            <label>Monitoring Region:</label>
-                            <select id="regionSelect" class="region-dropdown">
-                                <option value="amazon">Amazon Rainforest</option>
-                                <option value="congo">Congo Basin</option>
-                                <option value="boreal">Boreal Forest</option>
-                                <option value="australia">Australian Forests</option>
-                                <option value="custom">Custom Region</option>
-                            </select>
-                        </div>
-                        
-
-                        <div class="coordinates-input hidden" id="customCoords">
-                            <div class="coord-group">
-                                <label>Latitude:</label>
-                                <input type="number" id="latitude" step="0.001" placeholder="0.000">
-                            </div>
-                            <div class="coord-group">
-                                <label>Longitude:</label>
-                                <input type="number" id="longitude" step="0.001" placeholder="0.000">
-                            </div>
-                        </div>
-                        
-                        <button id="analyzeSatelliteData" class="analyze-btn">
-                            <i class="fas fa-search"></i>
-                            Analyze Region
-                        </button>
-                    </div>
-                    
-                    <div class="satellite-visualization">
-                        <canvas id="satelliteCanvas" width="400" height="300"></canvas>
-                        <div class="visualization-overlay">
-                            <div class="scanning-line"></div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Vegetation Indices Panel -->
-                <section class="panel vegetation-panel">
-                    <div class="panel-header">
-                        <h2><i class="fas fa-leaf"></i> Vegetation Analysis</h2>
-                        <div class="vegetation-status">
-                            <span class="status-indicator normal"></span>
-                            <span id="vegetationStatus">Monitoring</span>
-                        </div>
-                    </div>
-                    
-                    <div class="vegetation-indices">
-                        <div class="index-card ndvi">
-                            <div class="index-header">
-                                <span class="index-name">NDVI</span>
-                                <span class="index-description">Vegetation Health</span>
-                            </div>
-                            <div class="index-value" id="ndviValue">0.75</div>
-                            <div class="index-chart">
-                                <canvas id="ndviChart" width="150" height="80"></canvas>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="index-card evi">
-                            <div class="index-header">
-                                <span class="index-name">EVI</span>
-                                <span class="index-description">Enhanced Vegetation</span>
-                            </div>
-                            <div class="index-value" id="eviValue">0.68</div>
-                            <div class="index-chart">
-                                <canvas id="eviChart" width="150" height="80"></canvas>
-                            </div>
-                        </div>
-                       <p>kasa ahes</p> 
-                        <div class="index-card nbr">
-                            <div class="index-header">
-                                <span class="index-name">NBR</span>
-                                <span class="index-description">Burn Ratio</span>
-                            </div>
-                            <div class="index-value" id="nbrValue">0.82</div>
-                            <div class="index-chart">
-                                <canvas id="nbrChart" width="150" height="80"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Machine Learning Panel -->
-                <section class="panel ml-analysis-panel">
-                    <div class="panel-header">
-                        <h2><i class="fas fa-brain"></i> AI Analysis</h2>
-                        <div class="ml-status">
-                            <span class="status-indicator" id="mlStatusIndicator"></span>
-                            <span id="mlStatus">Model Ready</span>
-                        </div>
-                    </div>
-                    
-                    <div class="ml-controls">
-                        <div class="model-selector">
-                            <label>Analysis Model:</label>
-                            <select id="modelSelect" class="model-dropdown">
-                                <option value="random_forest">Random Forest (Deforestation)</option>
-                                <option value="cnn">CNN (Image Classification)</option>
-                                <option value="unet">U-Net (Segmentation)</option>
-                                <option value="rnn">RNN (Time Series)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="training-controls">
-                            <button id="trainModel" class="train-btn">
-                                <i class="fas fa-cog"></i>
-                                Train Model
-                            </button>
-                            <button id="runPrediction" class="predict-btn">
-                                <i class="fas fa-search"></i>
-                                Run Analysis
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="ml-results">
-                        <div class="prediction-display">
-                            <div class="prediction-header">
-                                <h4>Analysis Results</h4>
-                                <span class="confidence-score" id="confidenceScore">--</span>
-                            </div>
-                            <div class="prediction-content" id="predictionResults">
-                                <div class="no-results">No analysis completed yet</div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-metrics">
-                            <div class="metric">
-                                <span class="metric-label">Accuracy:</span>
-                                <span class="metric-value" id="modelAccuracy">--</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label">Training Time:</span>
-                                <span class="metric-value" id="trainingTime">--</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Disaster Monitoring Panel -->
-                <section class="panel disaster-panel">
-                    <div class="panel-header">
-                        <h2><i class="fas fa-exclamation-triangle"></i> Disaster Monitoring</h2>
-                        <div class="disaster-status">
-                            <span class="status-indicator active"></span>
-                            <span id="disasterStatus">Monitoring</span>
-                        </div>
-                    </div>
-                    
-                    <div class="disaster-alerts">
-                        <div class="alert-type fire-alerts">
-                            <div class="alert-header">
-                                <i class="fas fa-fire"></i>
-                                <span>Fire Alerts</span>
-                                <span class="alert-count" id="fireAlertCount">0</span>
-                            </div>
-                            <div class="alert-list" id="fireAlertsList">
-                                <div class="no-alerts">No active fire alerts</div>
-                            </div>
-                        </div>
-                        
-                        <div class="alert-type flood-alerts">
-                            <div class="alert-header">
-                                <i class="fas fa-tint"></i>
-                                <span>Flood Warnings</span>
-                                <span class="alert-count" id="floodAlertCount">0</span>
-                            </div>
-                            <div class="alert-list" id="floodAlertsList">
-                                <div class="no-alerts">No flood warnings</div>
-                            </div>
-                        </div>
-                        
-                        <div class="alert-type drought-alerts">
-                            <div class="alert-header">
-                                <i class="fas fa-sun"></i>
-                                <span>Drought Conditions</span>
-                                <span class="alert-count" id="droughtAlertCount">0</span>
-                            </div>
-                            <div class="alert-list" id="droughtAlertsList">
-                                <div class="no-alerts">No drought conditions</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Time Series Analysis Panel -->
-                <section class="panel timeseries-panel">
-                    <div class="panel-header">
-                        <h2><i class="fas fa-chart-line"></i> Trend Analysis</h2>
-                        <div class="analysis-controls">
-                            <select id="timeRangeSelect" class="time-range-dropdown">
-                                <option value="7d">Last 7 Days</option>
-                                <option value="30d">Last 30 Days</option>
-                                <option value="90d">Last 3 Months</option>
-                                <option value="1y">Last Year</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="timeseries-chart">
-                        <canvas id="timeseriesCanvas" width="500" height="250"></canvas>
-                    </div>
-                    
-                    <div class="trend-indicators">
-                        <div class="trend-item">
-                            <span class="trend-label">Deforestation Trend:</span>
-                            <span class="trend-value decreasing" id="deforestationTrend">
-                                <i class="fas fa-arrow-down"></i>
-                                Decreasing
-                            </span>
-                        </div>
-                        <div class="trend-item">
-                            <span class="trend-label">Fire Activity:</span>
-                            <span class="trend-value stable" id="fireTrend">
-                                <i class="fas fa-minus"></i>
-                                Stable
-                            </span>
-                        </div>
-                        <div class="trend-item">
-                            <span class="trend-label">Vegetation Health:</span>
-                            <span class="trend-value increasing" id="vegetationTrend">
-                                <i class="fas fa-arrow-up"></i>
-                                Improving
-                            </span>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
     </div>
-
-    
 
     <!-- Loading Screen -->
     <div id="loadingScreen" class="loading-screen hidden">
@@ -868,6 +922,8 @@
     <script src="js/earth_monitoring.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/animations.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/careers.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

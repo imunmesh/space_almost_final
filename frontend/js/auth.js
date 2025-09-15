@@ -24,6 +24,14 @@ class RoleManager {
                 this.selectRole(role);
             });
         });
+        
+        // Add event listener for careers button
+        const careersBtn = document.getElementById('careersBtn');
+        if (careersBtn) {
+            careersBtn.addEventListener('click', () => {
+                this.showCareersModal();
+            });
+        }
     }
 
     setupExitButtons() {
@@ -199,45 +207,194 @@ class RoleManager {
 
     exitRole() {
         this.currentRole = null;
+        this.showRoleSelection();
         
-        // Stop all systems
-        this.stopAllSystems();
-        
-        // Show transition back to role selection
-        this.showTransition('selection');
-        
-        setTimeout(() => {
-            this.showRoleSelection();
-        }, 1000);
+        // Emit role exit event
+        if (window.astroHELPApp) {
+            window.astroHELPApp.emit('role:exit');
+        }
     }
+    
+    showCareersModal() {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.className = 'careers-modal';
+        modal.innerHTML = `
+            <div class="careers-modal-content">
+                <div class="careers-modal-header">
+                    <h2><i class="fas fa-briefcase"></i> Space Tourism Careers</h2>
+                    <button class="careers-modal-close">&times;</button>
+                </div>
+                <div class="careers-modal-body">
+                    <div class="careers-search-bar">
+                        <input type="text" id="modalCareersSearch" class="careers-search-input" placeholder="Search for positions...">
+                        <select id="modalCareersFilter" class="careers-filter-select">
+                            <option value="all">All Categories</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="astronaut">Astronaut Crew</option>
+                            <option value="hospitality">Hospitality</option>
+                            <option value="medical">Medical & Safety</option>
+                            <option value="ground">Ground Support</option>
+                        </select>
+                    </div>
+                    <div class="careers-grid" id="modalCareersGrid">
+                        <!-- Career cards will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .careers-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .careers-modal-content {
+                background: linear-gradient(145deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+                border-radius: 25px;
+                width: 90%;
+                max-width: 1200px;
+                max-height: 90vh;
+                overflow: hidden;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+                border: 2px solid rgba(170, 0, 255, 0.5);
+                position: relative;
+            }
+            
+            .careers-modal-header {
+                padding: 20px 30px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .careers-modal-header h2 {
+                font-family: 'Orbitron', monospace;
+                color: var(--plasma-green);
+                margin: 0;
+            }
+            
+            .careers-modal-close {
+                background: none;
+                border: none;
+                color: var(--text-secondary);
+                font-size: 2rem;
+                cursor: pointer;
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+            }
+            
+            .careers-modal-close:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text-primary);
+            }
+            
+            .careers-modal-body {
+                padding: 30px;
+                max-height: 75vh;
+                overflow-y: auto;
+            }
+            
+            @media (max-width: 768px) {
+                .careers-modal-content {
+                    width: 95%;
+                    height: 95%;
+                }
+                
+                .careers-modal-body {
+                    padding: 20px;
+                }
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(modal);
+        
+        // Add close functionality
+        const closeBtn = modal.querySelector('.careers-modal-close');
+        closeBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            document.head.removeChild(style);
+        });
+        
+        // Close modal when clicking outside content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+                document.head.removeChild(style);
+            }
+        });
+        
+        // Initialize careers functionality
+        setTimeout(() => {
+            this.initializeCareersModal();
+        }, 100);
+    }
+    
+    initializeCareersModal() {
+        // Create a new instance of SpaceTourismCareers for the modal
+        if (window.SpaceTourismCareers) {
+            const modalCareers = new window.SpaceTourismCareers();
+            
+            // Override the renderCareerCards method to target the modal
+            modalCareers.renderCareerCards = function() {
+                const careersGrid = document.getElementById('modalCareersGrid');
+                if (!careersGrid) return;
 
-    stopAllSystems() {
-        // Stop management systems
-        if (window.debrisTracker) {
-            window.debrisTracker.stop();
-        }
-        
-        if (window.radarSystem) {
-            window.radarSystem.stop();
-        }
-        
-        if (window.spaceMap) {
-            window.spaceMap.stop();
-        }
-        
-        if (window.rescueSystem) {
-            window.rescueSystem.standby();
-        }
-        
-        // Stop tourist systems
-        if (window.touristHealthMonitor) {
-            window.touristHealthMonitor.deactivate();
-        }
-        
-        if (window.enhancedAIAssistant) {
-            window.enhancedAIAssistant.deactivate();
-        } else if (window.aiAssistant) {
-            window.aiAssistant.deactivate();
+                careersGrid.innerHTML = '';
+
+                this.careerData.forEach((career, index) => {
+                    const card = this.createCareerCard(career, index);
+                    careersGrid.appendChild(card);
+                });
+
+                // Add event listeners to expand buttons and job items
+                setTimeout(() => {
+                    this.setupCardEventListeners();
+                }, 100);
+            };
+            
+            // Override setupEventListeners to target modal elements
+            modalCareers.setupEventListeners = function() {
+                // Search functionality
+                const searchInput = document.getElementById('modalCareersSearch');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.filterCareers(e.target.value);
+                    });
+                }
+
+                // Filter functionality
+                const filterSelect = document.getElementById('modalCareersFilter');
+                if (filterSelect) {
+                    filterSelect.addEventListener('change', (e) => {
+                        this.filterByCategory(e.target.value);
+                    });
+                }
+            };
+            
+            // Render the career cards in the modal
+            modalCareers.renderCareerCards();
+            modalCareers.setupEventListeners();
         }
     }
 

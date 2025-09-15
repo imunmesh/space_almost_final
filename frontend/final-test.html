@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Careers Test</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/careers.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a1a;
+            color: #e0e0ff;
+            font-family: 'Exo 2', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        #initButton {
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #0a0a1a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+        #initButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+        }
+        #initButton:active {
+            transform: translateY(0);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .status.success {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+        }
+        .status.error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+        }
+        .instructions {
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .instructions h2 {
+            color: #00ff88;
+            margin-top: 0;
+        }
+        .instructions ul {
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Final Careers System Test</h1>
+        <button id="initButton">Initialize Careers System</button>
+        
+        <div class="status" id="statusMessage" style="display: none;"></div>
+        
+        <div class="instructions">
+            <h2>Test Instructions</h2>
+            <ul>
+                <li>Click the "Initialize Careers System" button above</li>
+                <li>After initialization, you should see career cards appear below</li>
+                <li>Click the "View Positions" button on any career card to expand it</li>
+                <li>Click on any job title to see detailed information in a modal</li>
+                <li>Test the search and filter functionality</li>
+                <li>If everything works correctly, the job details modal should appear when you click on a job</li>
+            </ul>
+        </div>
+        
+        <div class="careers-section">
+            <div class="careers-header">
+                <h2><i class="fas fa-briefcase"></i> Space Tourism Careers</h2>
+                <p>Explore career opportunities in the expanding field of commercial space travel</p>
+            </div>
+            
+            <div class="careers-search-bar">
+                <input type="text" id="careersSearch" class="careers-search-input" placeholder="Search for positions...">
+                <select id="careersFilter" class="careers-filter-select">
+                    <option value="all">All Categories</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="astronaut">Astronaut Crew</option>
+                    <option value="hospitality">Hospitality</option>
+                    <option value="medical">Medical & Safety</option>
+                    <option value="ground">Ground Support</option>
+                </select>
+            </div>
+            
+            <div class="careers-grid" id="careersGrid">
+                <!-- Career cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/careers.js"></script>
+    <script>
+        document.getElementById('initButton').addEventListener('click', function() {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.style.display = 'block';
+            
+            try {
+                // Initialize the careers system
+                const careers = new window.SpaceTourismCareers();
+                
+                // Show success message
+                statusMessage.className = 'status success';
+                statusMessage.innerHTML = '<strong>Success!</strong> Careers system initialized. Career cards should appear below.';
+                
+                // Hide the button after successful initialization
+                this.style.display = 'none';
+                
+                // Scroll to the careers section
+                setTimeout(() => {
+                    document.querySelector('.careers-section').scrollIntoView({ behavior: 'smooth' });
+                }, 1000);
+                
+            } catch (error) {
+                // Show error message
+                statusMessage.className = 'status error';
+                statusMessage.innerHTML = `<strong>Error:</strong> Failed to initialize careers system. ${error.message}`;
+                console.error('Error initializing careers system:', error);
+            }
+        });
+    </script>
+</body>
+</html>

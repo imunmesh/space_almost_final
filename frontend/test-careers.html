@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Careers System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/careers.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="careers-section">
+        <div class="careers-header">
+            <h2><i class="fas fa-briefcase"></i> Space Tourism Careers</h2>
+            <p>Explore career opportunities in the expanding field of commercial space travel</p>
+        </div>
+        
+        <div class="careers-search-bar">
+            <input type="text" id="careersSearch" class="careers-search-input" placeholder="Search for positions...">
+            <select id="careersFilter" class="careers-filter-select">
+                <option value="all">All Categories</option>
+                <option value="engineering">Engineering</option>
+                <option value="astronaut">Astronaut Crew</option>
+                <option value="hospitality">Hospitality</option>
+                <option value="medical">Medical & Safety</option>
+                <option value="ground">Ground Support</option>
+            </select>
+        </div>
+        
+        <div class="careers-grid" id="careersGrid">
+            <!-- Career cards will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script src="js/careers.js"></script>
+</body>
+</html>

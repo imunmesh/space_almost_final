@@ -224,21 +224,46 @@ class Dashboard {
     }
 
     showSystemDetails(systemItem) {
-        const systemName = systemItem.querySelector('.system-label')?.textContent;
-        const systemStatus = systemItem.querySelector('.system-status')?.textContent;
-        
-        // Add visual feedback
-        systemItem.classList.add('bounce-in');
+        // Add highlight effect
+        systemItem.classList.add('pulse');
         setTimeout(() => {
-            systemItem.classList.remove('bounce-in');
+            systemItem.classList.remove('pulse');
         }, 600);
         
-        console.log(`System details: ${systemName} - ${systemStatus}`);
-        
-        // Show system information
-        this.showNotification(systemName, `Status: ${systemStatus}`);
+        // Show system information (could open modal in future)
+        const systemName = systemItem.querySelector('.system-name')?.textContent;
+        console.log(`Showing details for ${systemName}`);
     }
+    
+    initializeCareersSystem() {
+        // Initialize the careers system in the management dashboard
+        if (window.SpaceTourismCareers && document.getElementById('careersGrid')) {
+            // Create instance for management dashboard
+            this.careersSystem = new window.SpaceTourismCareers();
+            
+            // Override renderCareerCards to target management dashboard
+            this.careersSystem.renderCareerCards = function() {
+                const careersGrid = document.getElementById('careersGrid');
+                if (!careersGrid) return;
 
+                careersGrid.innerHTML = '';
+
+                this.careerData.forEach((career, index) => {
+                    const card = this.createCareerCard(career, index);
+                    careersGrid.appendChild(card);
+                });
+
+                // Add event listeners to expand buttons and job items
+                setTimeout(() => {
+                    this.setupCardEventListeners();
+                }, 100);
+            };
+            
+            // Render the career cards
+            this.careersSystem.renderCareerCards();
+        }
+    }
+    
     // Data Management
     refreshAllData() {
         console.log('🔄 Refreshing all data...');
@@ -567,6 +592,45 @@ class Dashboard {
 
     getCurrentMode() {
         return this.currentMode;
+    }
+
+    showManagementDashboard() {
+        document.getElementById('roleSelectionScreen').classList.add('hidden');
+        document.getElementById('managementDashboard').classList.remove('hidden');
+        document.getElementById('touristDashboard').classList.add('hidden');
+        
+        // Initialize management systems
+        if (window.managementSystems) {
+            window.managementSystems.init();
+        }
+        
+        // Start debris tracking
+        if (window.debrisTracker) {
+            window.debrisTracker.start();
+        }
+        
+        // Start radar system
+        if (window.radarSystem) {
+            window.radarSystem.start();
+        }
+        
+        // Start space map
+        if (window.spaceMap) {
+            window.spaceMap.start();
+        }
+        
+        // Initialize AI agents
+        if (window.rescueSystem) {
+            window.rescueSystem.initializeAgents();
+        }
+        
+        // Start energy management AI
+        if (window.energyManagementAI) {
+            window.energyManagementAI.startOptimization();
+        }
+        
+        // Initialize careers system
+        this.initializeCareersSystem();
     }
 }
 

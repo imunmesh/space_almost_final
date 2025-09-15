@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Careers Test</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/careers.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0a0a1a;
+            color: #e0e0ff;
+            font-family: 'Exo 2', sans-serif;
+            padding: 20px;
+        }
+        .debug-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        #initButton {
+            background: #00ff88;
+            color: #0a0a1a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        #initButton:hover {
+            background: #00cc6a;
+        }
+        .console {
+            background: #1a1a2e;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .console-line {
+            margin: 5px 0;
+        }
+        .console-error {
+            color: #ff6b6b;
+        }
+        .console-info {
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>Debug Careers System Test</h1>
+        <button id="initButton">Initialize Careers System</button>
+        
+        <div class="console" id="consoleOutput">
+            <div class="console-line">Console output will appear here...</div>
+        </div>
+        
+        <div class="careers-section">
+            <div class="careers-header">
+                <h2><i class="fas fa-briefcase"></i> Space Tourism Careers</h2>
+                <p>Explore career opportunities in the expanding field of commercial space travel</p>
+            </div>
+            
+            <div class="careers-search-bar">
+                <input type="text" id="careersSearch" class="careers-search-input" placeholder="Search for positions...">
+                <select id="careersFilter" class="careers-filter-select">
+                    <option value="all">All Categories</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="astronaut">Astronaut Crew</option>
+                    <option value="hospitality">Hospitality</option>
+                    <option value="medical">Medical & Safety</option>
+                    <option value="ground">Ground Support</option>
+                </select>
+            </div>
+            
+            <div class="careers-grid" id="careersGrid">
+                <!-- Career cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Capture console output
+        const consoleOutput = document.getElementById('consoleOutput');
+        
+        function logToConsole(message, type = 'info') {
+            const line = document.createElement('div');
+            line.className = `console-line console-${type}`;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        // Override console methods
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            logToConsole(args.join(' '), 'info');
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            logToConsole(args.join(' '), 'error');
+            originalError.apply(console, args);
+        };
+    </script>
+    
+    <script src="js/careers.js"></script>
+    <script>
+        document.getElementById('initButton').addEventListener('click', function() {
+            logToConsole('Initializing careers system...', 'info');
+            try {
+                const careers = new window.SpaceTourismCareers();
+                logToConsole('Careers system initialized successfully', 'info');
+            } catch (error) {
+                logToConsole('Error initializing careers system: ' + error.message, 'error');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
