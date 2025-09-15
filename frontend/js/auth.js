@@ -29,7 +29,6 @@ class RoleManager {
     setupExitButtons() {
         const managementExitBtn = document.getElementById('managementExitBtn');
         const touristExitBtn = document.getElementById('touristExitBtn');
-        const nasaExitBtn = document.getElementById('nasaExitBtn');
         
         if (managementExitBtn) {
             managementExitBtn.addEventListener('click', () => {
@@ -42,28 +41,12 @@ class RoleManager {
                 this.exitRole();
             });
         }
-        
-        if (nasaExitBtn) {
-            nasaExitBtn.addEventListener('click', () => {
-                this.exitNASARole();
-            });
-        }
     }
 
     selectRole(role) {
         this.currentRole = role;
         
-        // Handle NASA role differently - emit event for app.js to handle
-        if (role === 'nasa') {
-            console.log('🚀 NASA role selected, delegating to app.js...');
-            // Emit role selected event for app.js to handle
-            if (window.astroHELP) {
-                window.astroHELP.emit('role:selected', 'nasa');
-            }
-            return;
-        }
-        
-        // Show transition animation for other roles
+        // Show transition animation
         this.showTransition(role);
         
         setTimeout(() => {
@@ -148,7 +131,6 @@ class RoleManager {
         document.getElementById('roleSelectionScreen').classList.remove('hidden');
         document.getElementById('managementDashboard').classList.add('hidden');
         document.getElementById('touristDashboard').classList.add('hidden');
-        document.getElementById('nasaDashboard').classList.add('hidden');
         
         // Reset role screen styling
         const roleScreen = document.getElementById('roleSelectionScreen');
@@ -227,24 +209,6 @@ class RoleManager {
         setTimeout(() => {
             this.showRoleSelection();
         }, 1000);
-    }
-    
-    exitNASARole() {
-        console.log('🚪 Exiting NASA Operations Console...');
-        this.currentRole = null;
-        
-        // Stop NASA operations if available
-        if (window.nasaOperations) {
-            window.nasaOperations.exitNASAConsole();
-        }
-        
-        // Emit role exit event
-        if (window.astroHELP) {
-            window.astroHELP.emit('role:exit');
-        }
-        
-        // Return to role selection
-        this.showRoleSelection();
     }
 
     stopAllSystems() {

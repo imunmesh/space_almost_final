@@ -128,12 +128,7 @@ class AstroHELPApp {
         // When role is selected
         this.on('role:selected', (role) => {
             console.log('🎯 Role selected:', role);
-            if (role === 'nasa') {
-                // Handle NASA role selection
-                this.handleNASARole();
-            } else {
-                this.modules.dashboard.init();
-            }
+            this.modules.dashboard.init();
         });
 
         this.on('role:exit', () => {
@@ -583,35 +578,6 @@ class AstroHELPApp {
 
     isInitialized() {
         return this.initialized;
-    }
-    
-    handleNASARole() {
-        console.log('🚀 Initializing NASA Operations Console...');
-        
-        // Hide role selection and show NASA dashboard
-        document.getElementById('roleSelectionScreen').classList.add('hidden');
-        document.getElementById('nasaDashboard').classList.remove('hidden');
-        
-        // Initialize NASA operations if available
-        if (window.nasaOperations) {
-            console.log('🏢 NASA Operations initialized successfully');
-        } else {
-            console.warn('⚠️ NASA Operations module not loaded, attempting to initialize...');
-            // Try to reinitialize after a short delay to allow scripts to load
-            setTimeout(() => {
-                if (window.NASAOperationsController) {
-                    window.nasaOperations = new NASAOperationsController();
-                    console.log('🔄 NASA Operations manually initialized');
-                } else {
-                    console.error('❌ NASA Operations Controller class not found');
-                    // Show error message to user
-                    const errorDiv = document.createElement('div');
-                    errorDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,0,0,0.9); color: white; padding: 20px; border-radius: 10px; z-index: 10000;';
-                    errorDiv.innerHTML = '<h3>NASA Operations Error</h3><p>Failed to load NASA Operations module. Please refresh the page.</p><button onclick="this.parentElement.remove()">Close</button>';
-                    document.body.appendChild(errorDiv);
-                }
-            }, 100);
-        }
     }
 }
 

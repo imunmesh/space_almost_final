@@ -480,11 +480,6 @@ class InterfaceEnhancementManager {
                     await this.rocketTransition.transitionTo('managementDashboard');
                 } else if (role === 'tourist') {
                     await this.rocketTransition.transitionTo('touristDashboard');
-                } else if (role === 'nasa') {
-                    // Handle NASA role through role manager
-                    if (window.roleManager) {
-                        window.roleManager.selectRole('nasa');
-                    }
                 }
             });
         });
